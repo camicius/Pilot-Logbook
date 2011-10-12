@@ -1,0 +1,103 @@
+body {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 90%;	
+	text-align: center;
+
+}
+html,body{
+    margin: 0;
+    padding:0;
+}
+
+
+#login{
+	position: relative;
+	border-color:cyan;
+	width: 507px;
+	height: 395px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 150px;
+
+	background-image:url('http://www.confartigianato.bs.it/images/ca_estesa.gif');
+	background-position: center;
+	background-repeat: no-repeat;
+}
+#box{
+	padding-top:180px;
+}
+.label_login
+{
+	width:100px;
+}
+#wrap {
+	width:754px;
+	margin-right:auto; 
+	margin-left: auto; 
+	text-align:center; 
+	margin-bottom:0;
+}
+#header { 
+	width:754px;
+	height:85px;
+	background-image:url(images/header-image.jpg);
+	background-repeat:no-repeat;
+	position: relative;	
+}
+	
+#main{ 
+	width:754px;
+	background-repeat:no-repeat;
+	padding-top:10px;
+	text-align:justify;
+	height:100%;
+
+
+}
+#main2{
+	width:754px;
+	background-image:url(images/mainimage.jpg);
+	background-repeat:repeat-y;
+	height:100%;
+	overflow:hidden;
+}
+.maincontent {
+	width:754px;
+	background-image:url(images/entrymiddle.jpg);
+	background-repeat:repeat-y;
+	height:100%;
+	float:left;
+	background-image:url('http://www.confartigianato.bs.it/images/ca_estesa.gif');
+	background-repeat:no-repeat;
+	background-position: center center;
+		min-height: 400px;
+}
+
+#footer {
+	clear:both;
+ 	height:40px;
+	background-image:url(images/footerimage.jpg);
+	background-repeat:no-repeat;
+	padding-top:18px;
+	font-size:10px;
+}
+.etichetta{
+	text-align-right
+}
+.valore{
+	text-align:right;
+}
+
+.listino{
+	width:754px;
+	border: 1px solid black;
+}
+.column_1{
+	width: 70%;
+	border: 1px solid black;
+}
+.column_2{
+
+	text-align: center;
+	border: 1px solid black;
+}
