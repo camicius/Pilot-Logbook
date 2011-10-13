@@ -38,15 +38,15 @@ $sqlInsertPratica='INSERT INTO dat.logbook(data, "depPlace", "arrPlace", "depTim
     VALUES (%%DATA%%, %%DEPPLACE%%,  %%ARRPLACE%%, %%DEPTIME%%, %%ARRTIME%%, %%ACFTMODEL%%, %%ACFTREG%%, %%SPT%%,%%MULTIPILOT%%, %%TOTALFLIGHTTIME%%, %%PICNAME%%, %%TODAY%%, %%TONIGHT%%, %%LDGDAY%%, %%LDGNIGHT%%, %%NIGHTTIME%%, %%IFRTIME%%, %%PICTIME%%, %%COPTIME%%, %%DUALTIME%%, %%INSTRTIME%%, %%RMKS%%)';
 
 
-
+define ('COSTANTE_PK',              '%%PK%%');
 $sqlUpdatePratica='UPDATE dat.logbook
    SET data=%%DATA%%, "depPlace"=%%DEPPLACE%%, "arrPlace"=%%ARRPLACE%%, "depTime"=%%DEPTIME%%, "arrTime"=%%ARRTIME%%, 
        "acftModel"=%%ACFTMODEL%%, "acftReg"=%%ACFTREG%%, spt=%%SPT%%, "multiPilot"=%%MULTIPILOT%%, "totalFlightTime"=%%TOTALFLIGHTTIME%%, 
        "picName"=%%PICNAME%%, "toDay"=%%TODAY%%, "toNight"=%%TONIGHT%%, "ldgDay"=%%LDGDAY%%, "ldgNight"=%%LDGNIGHT%%, 
        "nightTime"=%%NIGHTTIME%%, "ifrTime"=%%IFRTIME%%, "picTime"=%%PICTIME%%, "copTime"=%%COPTIME%%, "dualTime"=%%DUALTIME%%, 
        "instrTime"=%%INSTRTIME%%, rmks=%%RMKS%%, "user"=%%USER%%
- WHERE <condition>';
-;
+ WHERE PK=%%PK%%';
 
+$sqlDeletePratica='DELETE FROM dat.logbook WHERE PK=%%PK%%';
 
 ?>
