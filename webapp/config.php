@@ -15,7 +15,7 @@ define('DB_SCHEMA', 'metopack');
 */
 require_once 'MDB2.php';
 
-
+$options=Array('spt'=> Array('SE', 'ME'));
 
 /*
 costanti booleane sul db

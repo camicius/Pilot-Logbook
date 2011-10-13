@@ -124,9 +124,10 @@ function html_voli($tabella){
 	}
 }
 
-function html_volo($tabella=Array()){
+function html_volo($tabella=Array(), $oldies){
+	global $options;
 	$tabella['nuovo'] ='N';
-	if(!isset($tabella['mandamento'])){
+	if(!isset($tabella['data'])){
 		$tabella = Array(
 			'mandamento'        => $_SESSION['mandamento'],
 			'data'              => date("d/m/Y"),
@@ -150,77 +151,34 @@ function html_volo($tabella=Array()){
 	echo '<form action="index.php" method="post" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="nuovo" value="' . $tabella['nuovo'] . '" />';
 	if (isset($tabella['pk'])) echo '<input type="hidden" name="pk" value="' . $tabella['pk'] . '" />';
+
 	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: #00ff00;" colspan="2">' . $tabella['messaggio'] . '</th></tr>';
-	echo '<tr><th>Mandamento</th>';
-	if (canedit('mandamento', $tabella)) echo '<td>' . html_combobox('mandamento',$mandamenti, $tabella['mandamento']) . '</td>';
-	else echo '<td><input name="mandamento" type="hidden" value="' . $tabella['mandamento'] . '"></input>' . $mandamenti[$tabella['mandamento']]['label'] . '</td>';
+	var_dump($tabella);
+	var_dump($oldies);
 
-	echo '</tr><tr><th>Data richiesta</th>';
-	if (canedit('data', $tabella)) echo '<td><input name="data" type="text" value="' . $tabella['data'] . '"></input></td>';
-	else echo '<td><input name="data" type="hidden" value="' . $tabella['data'] . '"></input>' . $tabella['data'] . '</td>';
+	echo '<tr><th colspan="2">Data</th><td>'                                        . html_data         ('data',                          $tabella['data'])       . '</td></tr>';
+	echo '<tr><th rowspan="2">Partenza</th><th>aeroporto</th><td>'                  . html_text_and_old ('depplace',   $oldies['places'], $tabella['depplace'])   . '</td></tr>';
+	echo '<tr><th>orario</th><td>'                                                  . html_time         ('deptime',                       $tabella['deptime'])    . '</td></tr>';
+	echo '<tr><th rowspan="2">Arrivo</th><th>aeroporto</th><td>'                    . html_text_and_old ('arrplace',   $oldies['places'], $tabella['arrplace'])   . '</td></tr>';
+	echo '<tr><th>orario</th><td>'                                                  . html_time         ('arrtime',                       $tabella['arrtime'])    . '</td></tr>';
+	echo '<tr><th rowspan="2">Aeroplano</th><th>modello</th><td>'                   . html_text_and_old ('acftmodel',  $oldies['models'], $tabella['acftmodel'])  . '</td></tr>';
+	echo '<tr><th>marche</th><td>'                                                  . html_text_and_old ('acftreg',    $oldies['regs'],   $tabella['acftreg'])    . '</td></tr>';
+	echo '<tr><th colspan="2">S.P.T. (SE/ME)</th><td>'                              . html_combobox     ('spt',        $options['spt'],   $tabella['spt'])        . '</td></tr>';
+	echo '<tr><th colspan="2">Multi Pilot</th><td>'                                 . html_checkbox     ('multipilot',                    $tabella['multipilot']) . '</td></tr>';
+	echo '<tr><th colspan="2">Nome del PIC</th><td>'                                . html_text_and_old ('picname',    $oldies['pic'] ,   $tabella['picname'])    . '</td></tr>';
+	echo '<tr><th rowspan="2">Decolli</th><th>giorno</th><td>'                      . html_number       ('today',                         $tabella['today'])      . '</td></tr>';
+	echo '<tr><th>notte</th><td>'                                                   . html_number       ('tonight',                       $tabella['tonight'])    . '</td></tr>';
+	echo '<tr><th rowspan="2">Atterraggi</th><th>giorno</th><td>'                   . html_number       ('ldgday',                        $tabella['ldgday'])     . '</td></tr>';
+	echo '<tr><th>notte</th><td>'                                                   . html_number       ('ldgnight',                      $tabella['ldgnight'])   . '</td></tr>';
+	echo '<tr><th rowspan="2">Op. Time</th><th>notturno</th><td>'                   . html_time         ('nigthtime',                     $tabella['nigthtime'])  . '</td></tr>';
+	echo '<tr><th>IFR</th><td>'                                                     . html_time         ('ifrtime',                       $tabella['ifrtime'])    . '</td></tr>';
+	echo '<tr><th rowspan="4">Pilot <br />Function <br />Time</th><th>PIC</th><td>' . html_checkbox     ('pictime',                       $tabella['pictime'])    . '</td></tr>';
+	echo '<tr><<th>Copilot</th><td>'                                                . html_checkbox     ('coptime',                       $tabella['coptime'])    . '</td></tr>';
+	echo '<tr><th>Dual</th><td>'                                                    . html_checkbox     ('dualtime',                      $tabella['dualtime'])   . '</td></tr>';
+	echo '<tr><th>Instructor</th><td>'                                              . html_checkbox     ('instrtime',                     $tabella['instrtime'])  . '</td></tr>';
+	echo '<tr><th colspan="2">Remarks</th><td>'                                     . html_number       ('rmks',                          $tabella['rmks'])       . '</td></tr>';
 
-	echo '</tr><tr><th>Codice Metopack</th>';
-	if (canedit('au', $tabella)) echo '<td><input name="au" type="text" value="' . $tabella['au'] . '"></input></td>';
-	else echo '<td><input name="au" type="hidden" value="' . $tabella['au'] . '"></input>' . $tabella['au'] . '</td>';
 
-	echo '</tr><tr><th>Ragione sociale</th>';
-	if (canedit('ragsoc', $tabella)) echo '<td><input name="ragsoc" type="text" value="' . $tabella['ragsoc'] . '"></input></td>';
-	else echo '<td><input name="ragsoc" type="hidden" value="' . $tabella['ragsoc'] . '"></input>' . $tabella['ragsoc'] . '</td>';
-
-	echo '</tr><tr><th>Codice REA</th>';
-	if (canedit('rea', $tabella)) echo '<td><input name="rea" type="text" value="' . $tabella['rea'] . '"></input></td>';
-	else echo '<td><input name="rea" type="hidden" value="' . $tabella['rea'] . '"></input>' . $tabella['rea'] . '</td>';
-
-	echo '</tr><tr><th>Indirizzo PEC</th>';
-	if (canedit('indirizzo', $tabella)) echo '<td><input name="indirizzo" type="text" value="' . $tabella['indirizzo'] . '"></input></td>';
-	else echo '<td><input name="indirizzo" type="hidden" value="' . $tabella['indirizzo'] . '"></input>' . $tabella['indirizzo'] . '</td>';
-
-	echo '</tr><tr><th>Codice d\'ordine</th>';
-	if (canedit('protocollo', $tabella)) echo '<td><input name="protocollo" type="text" value="' . $tabella['protocollo'] . '"></input></td>';
-	else echo '<td><input name="protocollo" type="hidden" value="' . $tabella['protocollo'] . '"></input>' . $tabella['protocollo'] . '</td>';
-
-	echo '</tr><tr><th>PEC attiva</th>';
-	if (canedit('pec_attiva', $tabella)) echo '<td>' .  html_checkbox('pec_attiva',$tabella['pec_attiva']) . '</td>';
-	else echo '<td><input name="pec_attiva" type="hidden" value="' . $tabella['pec_attiva'] . '"></input>' . $tabella['pec_attiva'] . '</td>';
-
-	echo '</tr><tr><th>Richiesta CNS</th>';
-	if (canedit('cns_richiesta', $tabella)) echo '<td>' .  html_checkbox('cns_richiesta',$tabella['cns_richiesta']) . '</td>';
-	else echo '<td><input name="cns_richiesta" type="hidden" value="' . $tabella['cns_richiesta'] . '"></input>' . $tabella['cns_richiesta'] . '</td>';
-
-	echo '</tr><tr><th>CNS attiva</th>';
-	if (canedit('cns_attiva', $tabella)) echo '<td>' .  html_checkbox('cns_attiva',$tabella['cns_attiva']) . '</td>';
-	else echo '<td><input name="cns_attiva" type="hidden" value="' . $tabella['cns_attiva'] . '"></input>' . $tabella['cns_attiva'] . '</td>';
-
-	echo '</tr><tr><th>Comunica in carico</th>';
-	if (canedit('comunica_incarico', $tabella)) echo '<td>' .  html_checkbox('comunica_incarico',$tabella['comunica_incarico']) . '</td>';
-	else echo '<td><input name="comunica_incarico" type="hidden" value="' . $tabella['comunica_incarico'] . '"></input>' . $tabella['comunica_incarico'] . '</td>';
-
-	echo '</tr><tr><th>Comunica inviata</th>';
-	if (canedit('comunica_invia', $tabella)) echo '<td>' .  html_checkbox('comunica_invia',$tabella['comunica_invia']) . '</td>';
-	else echo '<td><input name="comunica_invia" type="hidden" value="' . $tabella['comunica_invia'] . '"></input>' . $tabella['comunica_invia'] . '</td>';
-
-	echo '</tr><tr><th>Comunica evasa</th>';
-	if (canedit('comunica_evasa', $tabella)) echo '<td>' .  html_checkbox('comunica_evasa',$tabella['comunica_evasa']) . '</td>';
-	else echo '<td><input name="comunica_evasa" type="hidden" value="' . $tabella['comunica_evasa'] . '"></input>' . $tabella['comunica_evasa'] . '</td>';
-
-	echo '</tr><tr><th>Note</th>';
-	if (canedit('note', $tabella)) echo '<td><input name="note" type="textarea" value="' . $tabella['note'] . '"></input></td>';
-	else echo '<td><input name="note" type="hidden" value="' . $tabella['note'] . '"></input>' . $tabella['note'] . '</td>';
-
-	echo '</tr><tr><th>Volo chiusa</th>';
-	if (canedit('chiusura', $tabella)) echo '<td>' .  html_checkbox('chiusura',$tabella['chiusura']) . '</td>';
-	else echo '<td><input name="chiusura" type="hidden" value="' . $tabella['chiusura'] . '"></input>' . $tabella['chiusura'] . '</td>';
-	
-	if($_SESSION['ruolo']==COSTANTE_ADMIN){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
-	}else if($_SESSION['ruolo']==COSTANTE_ATTIV && $tabella['chiusura']==booleanToDB(false)){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
-	}else if(($_SESSION['ruolo']==COSTANTE_OPER) && $tabella['pec_attiva']==booleanToDB(false)){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
-	}
 
 
 	echo '</form>';
@@ -243,9 +201,40 @@ function html_checkbox( $name, $value=FALSE){
 	if ($value == booleanToDB(true)) $string .=  "<input type='checkbox' name='$name' checked='checked' />";
 	else $string .=  "<input type='checkbox' name='$name' />";
 	return $string;
-
 }
 
+function html_data( $name, $value=FALSE){
+	$string="";
+	//$string .='<input name="' . $name . '" type="text" value="' . $tabella[$name] . '"></input>';
+	return $string;
+}
 
+function html_text( $name, $value=''){
+	$string="";
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	return $string;
+}
+
+function html_time( $name, $value=''){
+	$string="";
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	return $string;
+}
+function html_number( $name, $value=''){
+	$string="";
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	return $string;
+}
+function html_text_and_old( $name, $oldValues, $value=''){
+	$string="";
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	$string .='<select  name="' . $name . '" >';
+	foreach ($oldValues as $old){
+		$string .= '  <option value="' . $old . '" label="' . $old . '">' . $old . '</option>';
+	} 
+	$string .='</select>';
+	
+	return $string;
+}
 
 ?> 

@@ -29,17 +29,21 @@ function verificaPassword($username, $password){
 function pagina(){
 	// Costruzione della pagina
 	if(isset($_GET['pk'])){										#richiamo la pagina del volo per la modifica
+		$oldies=getOldies();
 		$volo=getVolo($_GET['pk']);
-		html_volo($volo);
+		html_volo($volo, $oldies);
 	}else if(isset($_GET['new'])){ 								#richiamo la pagina del volo per l'inserimento
-		html_volo();
+		$oldies=getOldies();
+		html_volo(null, $oldies);
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo il volo nuovo e lo inserisco
+		$oldies=getOldies();
 		$volo=insertVolo($_POST);
-		html_volo($volo);
+		html_volo($volo, $oldies);
 	
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo il volo vecchio e lo modifico	
+		$oldies=getOldies();
 		$volo=updateVolo($_POST);
-		html_volo($volo);
+		html_volo($volo, $oldies);
 	}else{ 														#mostro l'elenco dei voli
 		$tabella=getVoli();
 		html_voli($tabella);
@@ -70,8 +74,68 @@ function getVoli(){
 
 }
 
+
+
+function getOldies(){
+
+	global $db, $username, $sqlOldPlaces, $sqlOldModel, $sqlOldRegs, $sqlOldPIC;
+
+//recupero i vecchi aeroporti
+	$sql=$sqlOldPlaces;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
+	$res=$db->query($sql);
+	if (PEAR::isError($res)) {
+	//	var_dump($res);
+		errore("getVolo - ".$res->getUserInfo());
+	}
+	$oldPlaces= $res->fetchCol();
+
+//recupero i vecchi modelli
+	$sql=$sqlOldModel;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
+	$res=$db->query($sql);
+	if (PEAR::isError($res)) {
+	//	var_dump($res);
+		errore("getVolo - ".$res->getUserInfo());
+	}
+	$oldModels= $res->fetchCol();
+
+//recupero le vecchie marche
+	$sql=$sqlOldRegs;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
+	$res=$db->query($sql);
+	if (PEAR::isError($res)) {
+	//	var_dump($res);
+		errore("getVolo - ".$res->getUserInfo());
+	}
+	$oldRegs= $res->fetchCol();
+
+//recupero i vecchi PIC name
+	$sql=$sqlOldPIC;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
+	$res=$db->query($sql);
+	if (PEAR::isError($res)) {
+	//	var_dump($res);
+		errore("getVolo - ".$res->getUserInfo());
+	}
+	$oldPIC= $res->fetchCol();
+
+
+	$oldies=Array(
+		'places' => $oldPlaces,
+		'models' => $oldModels,
+		'regs'   => $oldRegs,
+		'pic'    => $oldPIC,	
+	);	
+	return $oldies;
+}
+
+
+
 function getVolo($pk){
-	global $sqlVolo, $db;
+	global $sqlVolo, $db, $username, $sqlOldPlaces, $sqlOldModel, $sqlOldRegs, $sqlOldPIC;
+
+
 	$sql=$sqlVolo;
  	$sql=str_replace(COSTANTE_PK,$db->quote($pk, 'text'), $sql);
 
@@ -82,13 +146,13 @@ function getVolo($pk){
 	//	var_dump($res);
 		errore("getVolo - ".$res->getUserInfo());
 	}
+	
+	
 	while (($row = $res->fetchRow())) {
     	$voli[]=$row;
 	}
 
 	return $voli[0];
-
-
 }
 
 function insertVolo($volo){

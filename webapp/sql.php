@@ -9,6 +9,14 @@ define ('COSTANTE_USER', '%%USER%%');
 $sqlVoli='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
 
 
+
+$sqlOldPlaces = 'select distinct arrplace  from dat.logbook WHERE username=%%USER%%  union distinct  select distinct depplace from dat.logbook WHERE username=%%USER%% ';
+$sqlOldModel  = 'select distinct acftmodel from dat.logbook WHERE username=%%USER%%  ';
+$sqlOldRegs   = 'select distinct acftreg   from dat.logbook WHERE username=%%USER%%  ';
+$sqlOldPIC    = 'select distinct picname   from dat.logbook WHERE username=%%USER%%  ';
+
+
+
 define ('COSTANTE_PK', '%%PK%%');
 $sqlVolo='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE pk=%%PK%% ';
 
