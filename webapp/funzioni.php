@@ -13,6 +13,9 @@ function errore($testo){
 
 function verificaPassword($username, $password){
 	global $db;
+
+//TODO
+	$result="1";
 	//
 	//echo $result. "\n\n";
 	if ($result=="1"){
@@ -21,50 +24,37 @@ function verificaPassword($username, $password){
 	else{
 		return false;
 	}
-
-}
-function getMandamento($dn){
-	global $mandamentiLdap;
-	//uid=occhi,ou=People,o=Upa
-	//uid=se0287,ou=Lumezzane,ou=People,o=Upa
-	$dnArray=explode(',' , $dn);
-	if(count($dnArray)==4){	#paesi
-		$mandamento=str_replace("ou=","",$dnArray[1]);
-		return array_search($mandamento, $mandamentiLdap);
-	}else{#brescia
-		return("001");
-	}
 }
 
 function pagina(){
 	// Costruzione della pagina
-	if(isset($_GET['pk'])){										#richiamo la pagina della pratica per la modifica
-		$pratica=getPratica($_GET['pk']);
-		html_pratica($pratica);
-	}else if(isset($_GET['new'])){ 								#richiamo la pagina della pratica per l'inserimento
-		html_pratica();
-	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo la pratica nuova e la inserisco
-		$pratica=insertPratica($_POST);
-		html_pratica($pratica);
+	if(isset($_GET['pk'])){										#richiamo la pagina della volo per la modifica
+		$volo=getVolo($_GET['pk']);
+		html_volo($volo);
+	}else if(isset($_GET['new'])){ 								#richiamo la pagina della volo per l'inserimento
+		html_volo();
+	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo la volo nuova e la inserisco
+		$volo=insertVolo($_POST);
+		html_volo($volo);
 	
-	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo la pratica vecchia e la modifico	
-		$pratica=updatePratica($_POST);
-		html_pratica($pratica);
-	}else{ 														#mostro l'elenco delle pratiche
-		$tabella=getPratiche();
-		html_pratiche($tabella);
+	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo la volo vecchia e la modifico	
+		$volo=updateVolo($_POST);
+		html_volo($volo);
+	}else{ 														#mostro l'elenco delle voli
+		$tabella=getVoli();
+		html_voli($tabella);
 	}
 	
 }
 
-function getPratiche($quali="aperte"){
-	global $sqlPratiche, $sqlPraticheMandamento, $db;
+function getVoli($quali="aperte"){
+	global $sqlVoli, $sqlVoliMandamento, $db;
 	$ordinamento="data";
 	$tipoOrdinamento="asc";
 	if($_SESSION['ruolo']==COSTANTE_ADMIN || $_SESSION['ruolo']==COSTANTE_ATTIV)
-		$sql=$sqlPratiche;
+		$sql=$sqlVoli;
 	else{
-		$sql=$sqlPraticheMandamento;
+		$sql=$sqlVoliMandamento;
  		$sql=str_replace(COSTANTE_MANDAMENTO,$db->quote($_SESSION['mandamento'], 'text'), $sql);
 	}
 
@@ -102,21 +92,21 @@ function getPratiche($quali="aperte"){
 
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getPratiche - ".$res->getUserInfo());
+		errore("getVoli - ".$res->getUserInfo());
 	}
-	$pratiche =Array();	
+	$voli =Array();	
 	while (($row = $res->fetchRow())) {
-    	$pratiche[]=$row;
+    	$voli[]=$row;
 	}
 	
-	return $pratiche;
+	return $voli;
 
 
 }
 
-function getPratica($pk){
-	global $sqlPratica, $db;
-	$sql=$sqlPratica;
+function getVolo($pk){
+	global $sqlVolo, $db;
+	$sql=$sqlVolo;
  	$sql=str_replace(COSTANTE_PK,$db->quote($pk, 'text'), $sql);
 
 
@@ -124,46 +114,46 @@ function getPratica($pk){
 
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getPratica - ".$res->getUserInfo());
+		errore("getVolo - ".$res->getUserInfo());
 	}
 	while (($row = $res->fetchRow())) {
-    	$pratiche[]=$row;
+    	$voli[]=$row;
 	}
 
-	return $pratiche[0];
+	return $voli[0];
 
 
 }
 
-function insertPratica($pratica){
-	//print_r($pratica);
-	global $sqlInsertPratica, $db;
-	$sql=$sqlInsertPratica;
+function insertVolo($volo){
+	//print_r($volo);
+	global $sqlInsertVolo, $db;
+	$sql=$sqlInsertVolo;
 
-	if($pratica['protocollo']=="") $pratica['pec_attiva']=booleanToDB(true);
-	$pratica['pec_attiva']=        formToDB($pratica,'pec_attiva');
-	$pratica['cns_richiesta']=     formToDB($pratica,'cns_richiesta');
-	$pratica['cns_attiva']=        formToDB($pratica,'cns_attiva');
-	$pratica['comunica_incarico']= formToDB($pratica,'comunica_incarico');
-	$pratica['comunica_invia']=    formToDB($pratica,'comunica_invia');
-	$pratica['comunica_evasa']=    formToDB($pratica,'comunica_evasa');
-	$pratica['chiusura']=          formToDB($pratica,'chiusura');
+	if($volo['protocollo']=="") $volo['pec_attiva']=booleanToDB(true);
+	$volo['pec_attiva']=        formToDB($volo,'pec_attiva');
+	$volo['cns_richiesta']=     formToDB($volo,'cns_richiesta');
+	$volo['cns_attiva']=        formToDB($volo,'cns_attiva');
+	$volo['comunica_incarico']= formToDB($volo,'comunica_incarico');
+	$volo['comunica_invia']=    formToDB($volo,'comunica_invia');
+	$volo['comunica_evasa']=    formToDB($volo,'comunica_evasa');
+	$volo['chiusura']=          formToDB($volo,'chiusura');
 
-	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($pratica['mandamento'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($volo['mandamento'],         'text'), $sql);
 	$sql=str_replace(COSTANTE_UTENTE,       $db->quote($_SESSION['username'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_AU,           $db->quote($pratica['au'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($pratica['ragsoc'],             'text'), $sql);
-	$sql=str_replace(COSTANTE_REA,          $db->quote($pratica['rea'],                'text'), $sql);
-	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($pratica['indirizzo'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($pratica['protocollo'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($pratica['pec_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($pratica['cns_richiesta'],      'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($pratica['cns_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($pratica['comunica_incarico'],  'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($pratica['comunica_invia'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($pratica['comunica_evasa'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_NOTE,         $db->quote($pratica['note'],               'text'), $sql);
-	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($pratica['chiusura'] ,          'text'), $sql);
+	$sql=str_replace(COSTANTE_AU,           $db->quote($volo['au'],                 'text'), $sql);
+	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($volo['ragsoc'],             'text'), $sql);
+	$sql=str_replace(COSTANTE_REA,          $db->quote($volo['rea'],                'text'), $sql);
+	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($volo['indirizzo'],          'text'), $sql);
+	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($volo['protocollo'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($volo['pec_attiva'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($volo['cns_richiesta'],      'text'), $sql);
+	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($volo['cns_attiva'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($volo['comunica_incarico'],  'text'), $sql);
+	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($volo['comunica_invia'],     'text'), $sql);
+	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($volo['comunica_evasa'],     'text'), $sql);
+	$sql=str_replace(COSTANTE_NOTE,         $db->quote($volo['note'],               'text'), $sql);
+	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($volo['chiusura'] ,          'text'), $sql);
 
 
 
@@ -173,45 +163,45 @@ function insertPratica($pratica){
 
 	if (PEAR::isError($res)) {
 		//var_dump($res);
-		errore("insertPratica - ".$res->getUserInfo());
-		$pratica['messaggio']="Inserimento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
+		errore("insertVolo - ".$res->getUserInfo());
+		$volo['messaggio']="Inserimento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
 	}else{
-		$pratica['messaggio']="Inserimento effettuato";
-		$pratica['pk'] = $db->lastInsertID();
+		$volo['messaggio']="Inserimento effettuato";
+		$volo['pk'] = $db->lastInsertID();
 	}
 	
-	return $pratica;
+	return $volo;
 }
 
-function updatePratica($pratica){
-	global $sqlUpdatePratica, $db;
-	$sql=$sqlUpdatePratica;
+function updateVolo($volo){
+	global $sqlUpdateVolo, $db;
+	$sql=$sqlUpdateVolo;
 
 
-	$pratica['pec_attiva']=        formToDB($pratica,'pec_attiva');
-	$pratica['cns_richiesta']=     formToDB($pratica,'cns_richiesta');
-	$pratica['cns_attiva']=        formToDB($pratica,'cns_attiva');
-	$pratica['comunica_incarico']= formToDB($pratica,'comunica_incarico');
-	$pratica['comunica_invia']=    formToDB($pratica,'comunica_invia');
-	$pratica['comunica_evasa']=    formToDB($pratica,'comunica_evasa');
-	$pratica['chiusura']=          formToDB($pratica,'chiusura');
+	$volo['pec_attiva']=        formToDB($volo,'pec_attiva');
+	$volo['cns_richiesta']=     formToDB($volo,'cns_richiesta');
+	$volo['cns_attiva']=        formToDB($volo,'cns_attiva');
+	$volo['comunica_incarico']= formToDB($volo,'comunica_incarico');
+	$volo['comunica_invia']=    formToDB($volo,'comunica_invia');
+	$volo['comunica_evasa']=    formToDB($volo,'comunica_evasa');
+	$volo['chiusura']=          formToDB($volo,'chiusura');
 
-	$sql=str_replace(COSTANTE_PK,           $db->quote($pratica['pk'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($pratica['mandamento'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_PK,           $db->quote($volo['pk'],                 'text'), $sql);
+	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($volo['mandamento'],         'text'), $sql);
 	$sql=str_replace(COSTANTE_UTENTE,       $db->quote($_SESSION['username'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_AU,           $db->quote($pratica['au'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($pratica['ragsoc'],             'text'), $sql);
-	$sql=str_replace(COSTANTE_REA,          $db->quote($pratica['rea'],                'text'), $sql);
-	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($pratica['indirizzo'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($pratica['protocollo'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($pratica['pec_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($pratica['cns_richiesta'],      'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($pratica['cns_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($pratica['comunica_incarico'],  'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($pratica['comunica_invia'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($pratica['comunica_evasa'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_NOTE,         $db->quote($pratica['note'],               'text'), $sql);
-	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($pratica['chiusura'] ,          'text'), $sql);
+	$sql=str_replace(COSTANTE_AU,           $db->quote($volo['au'],                 'text'), $sql);
+	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($volo['ragsoc'],             'text'), $sql);
+	$sql=str_replace(COSTANTE_REA,          $db->quote($volo['rea'],                'text'), $sql);
+	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($volo['indirizzo'],          'text'), $sql);
+	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($volo['protocollo'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($volo['pec_attiva'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($volo['cns_richiesta'],      'text'), $sql);
+	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($volo['cns_attiva'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($volo['comunica_incarico'],  'text'), $sql);
+	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($volo['comunica_invia'],     'text'), $sql);
+	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($volo['comunica_evasa'],     'text'), $sql);
+	$sql=str_replace(COSTANTE_NOTE,         $db->quote($volo['note'],               'text'), $sql);
+	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($volo['chiusura'] ,          'text'), $sql);
 	
 
 
@@ -220,25 +210,23 @@ function updatePratica($pratica){
 
 	if (PEAR::isError($res)) {
 		//var_dump($res);
-		errore("insertPratica - ".$res->getUserInfo());
-		$pratica['messaggio']="Aggiornamento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
+		errore("insertVolo - ".$res->getUserInfo());
+		$volo['messaggio']="Aggiornamento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
 	}else{
-		$pratica['messaggio']="Aggiornamento effettuato";
+		$volo['messaggio']="Aggiornamento effettuato";
 	}
-	return $pratica;
+	return $volo;
 
 
 }
 
-function formToDB($pratica,$campo){
-	if(isset($pratica[$campo]) && $pratica[$campo]=="on") return booleanToDB(true);
-	else if(isset($pratica[$campo])) return $pratica[$campo];
+function formToDB($volo,$campo){
+	if(isset($volo[$campo]) && $volo[$campo]=="on") return booleanToDB(true);
+	else if(isset($volo[$campo])) return $volo[$campo];
 	else return booleanToDB(false);
 
 
 }
-
-
 function booleanToDB($bool){
 	if ($bool) return "S";
 	else return "N";
@@ -246,39 +234,6 @@ function booleanToDB($bool){
 }
 function dbToBoolean($dbValue){
 	return $dbValue=="S";
-
-}
-function canedit($campo, $record){
-	global $sqlAuth, $db;
-
-	switch ($_SESSION['ruolo']){
-		case COSTANTE_ADMIN: // per l'admin valgono sempre i valori del db
-		case COSTANTE_RO: // per ro valgono sempre i valori del db
-			break;	
-		case COSTANTE_ATTIV: //per l'attivatore vale sempre il valore del db a meno che la pratica sia chiusa
-			if (dbToBoolean($record['chiusura']))return false;
-			break;
-		case COSTANTE_OPER: //per oper  vale sempre il valore del db a meno che la pratica abbia la pec attiva
-			if (dbToBoolean($record['pec_attiva']))return false;
-			break;
-	}
-
-
-	$sql=$sqlAuth;
- 	$sql=str_replace(COSTANTE_CAMPO,$db->quote($campo, 'text'), $sql);
- 	$sql=str_replace(COSTANTE_RUOLO,$db->quote($_SESSION['ruolo'], 'text'), $sql);
-	
-	$res=$db->query($sql);
-
-	if (PEAR::isError($res)) {
-	//	var_dump($res);
-		errore("canedit - ".$res->getUserInfo());
-	}
-	$auth=$res->fetchRow();
-
-	if($auth['auth']=="w") return true;
-	else return false;
-	
 
 }
 ?>

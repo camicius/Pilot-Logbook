@@ -71,7 +71,7 @@ function html_headerRow($quali,$tipoOrdinamento,$tipoOrdinamentoNew){
 }
 
 
-function html_pratiche($tabella){
+function html_voli($tabella){
 	global $mandamenti, $titoli;
 	$tipoOrdinamento    = "asc";
 	$tipoOrdinamentoNew = "asc";
@@ -97,8 +97,8 @@ function html_pratiche($tabella){
 	
 
 	echo '<h3>'. $titolo . '</h3>';
-	echo '<h3> <a href="index.php?new"> Inserisci una nuova pratica</a> -  <a href="index.php?logout">Logout</a> </h3>';
-	if(count ($tabella)==0)echo '<h1> Nessuna pratica presente</h1>';
+	echo '<h3> <a href="index.php?new"> Inserisci una nuova volo</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	if(count ($tabella)==0)echo '<h1> Nessuna volo presente</h1>';
 	else {
 		echo '<table border="1"> ';
 		html_headerRow($quali,$tipoOrdinamento,$tipoOrdinamentoNew);
@@ -127,10 +127,10 @@ function html_pratiche($tabella){
 		}
 		echo '</table> ';
 	}
-	echo '<a href="index.php?quali=aperte"> Lista pratiche aperte</a>  - <a href="index.php?quali=chiuse"> Lista pratiche chiuse</a>  - <a href="index.php?quali=tutte"> Lista completa pratiche </a>';
+	echo '<a href="index.php?quali=aperte"> Lista voli aperte</a>  - <a href="index.php?quali=chiuse"> Lista voli chiuse</a>  - <a href="index.php?quali=tutte"> Lista completa voli </a>';
 }
 
-function html_pratica($tabella=Array()){
+function html_volo($tabella=Array()){
 	global $mandamenti;
 	$tabella['nuovo'] ='N';
 	if(!isset($tabella['mandamento'])){
@@ -214,26 +214,26 @@ function html_pratica($tabella=Array()){
 	if (canedit('note', $tabella)) echo '<td><input name="note" type="textarea" value="' . $tabella['note'] . '"></input></td>';
 	else echo '<td><input name="note" type="hidden" value="' . $tabella['note'] . '"></input>' . $tabella['note'] . '</td>';
 
-	echo '</tr><tr><th>Pratica chiusa</th>';
+	echo '</tr><tr><th>Volo chiusa</th>';
 	if (canedit('chiusura', $tabella)) echo '<td>' .  html_checkbox('chiusura',$tabella['chiusura']) . '</td>';
 	else echo '<td><input name="chiusura" type="hidden" value="' . $tabella['chiusura'] . '"></input>' . $tabella['chiusura'] . '</td>';
 	
 	if($_SESSION['ruolo']==COSTANTE_ADMIN){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci pratica" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna pratica" /></th></tr>';
+		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
+		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
 	}else if($_SESSION['ruolo']==COSTANTE_ATTIV && $tabella['chiusura']==booleanToDB(false)){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci pratica" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna pratica" /></th></tr>';
+		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
+		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
 	}else if(($_SESSION['ruolo']==COSTANTE_OPER) && $tabella['pec_attiva']==booleanToDB(false)){
-		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci pratica" /></th></tr>';
-		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna pratica" /></th></tr>';
+		if($tabella['nuovo'] ==booleanToDB(true))	echo '<tr><th colspan="2"><input type="submit" value="Inserisci volo" /></th></tr>';
+		else echo '<tr><th colspan="2"><input type="submit" value="Aggiorna volo" /></th></tr>';
 	}
 
 
 	echo '</form>';
 	echo '</table> ';
-	echo '<a href="index.php">Torna all\'elenco pratiche</a><br />';
-	echo '<a href="index.php?new">Inserisci una nuova pratica</a><br />';
+	echo '<a href="index.php">Torna all\'elenco voli</a><br />';
+	echo '<a href="index.php?new">Inserisci una nuova volo</a><br />';
 }
 function html_combobox($name, $options, $selezionato=""){
 	$string="";
