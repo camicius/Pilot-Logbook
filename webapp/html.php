@@ -6,13 +6,13 @@ function html_header(){
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">';
 	echo '<head>';
-	echo '	<title>UPA - Gestione processo PEC</title>';
+	echo '	<title>Private Pilot Logbook</title>';
 	echo '	<link href="style.css" rel="stylesheet" type="text/css">';
 	echo '<head>';
 	echo '<body>';
 
 
-		echo '<h1> UPA - Gestione processo PEC</h1>';
+		echo '<h1> Private Pilot Logbook</h1>';
 
 
 
@@ -44,94 +44,87 @@ echo '</html>';
 
 
 }
-function html_headerRow($quali,$tipoOrdinamento,$tipoOrdinamentoNew){
+function html_headerRow(){
 	echo '<tr>';
 	echo '<th rowspan="2"> &nbsp;</th>';
-	echo '<th rowspan="2"> Mandamento <a href="index.php?quali=' . $quali . '&ord=mandamento&tipo=' . $tipoOrdinamentoNew . '"><img src="ord.gif" /></a></th>';
-	echo '<th rowspan="2"> Data richiesta <a href="index.php?quali=' . $quali . '&ord=data&tipo=' . $tipoOrdinamentoNew . '"><img src="ord.gif" /></a></th>';	
-	echo '<th rowspan="2"> Codice metopack </th>';
-	echo '<th rowspan="2"> Ragione sociale</th>';
-	echo '<th rowspan="2"> Codice REA</th>';
-	echo '<th rowspan="2"> Indirizzo PEC</th>';
-	echo '<th rowspan="2"> Codice d\'ordine </th>';
-	echo '<th rowspan="2"> PEC attiva </th>';
-	echo '<th rowspan="2"> Richiesta CNS</th>';
-	echo '<th rowspan="2"> CNS attiva</th>';
-	echo '<th colspan="3"> Comunica </th>';
-	echo '<th rowspan="2"> Note</th>';
-	echo '<th rowspan="2"> Chiusura</th>';
-	echo '<th rowspan="2"> &nbsp;</th>';
+	echo '<th rowspan="2"> Data </th>';
+	echo '<th colspan="2"> Partenza</th>';	
+	echo '<th colspan="2"> Arrivo </th>';
+	echo '<th colspan="2"> Aereo</th>';
+	echo '<th rowspan="2"> SPT</th>';
+	echo '<th rowspan="2"> Multi<br /> Pilot <br />Time</th>';
+	echo '<th rowspan="2"> Total <br />Pilot<br /> Time</th>';
+	echo '<th rowspan="2"> Nome del PIC </th>';
+	echo '<th colspan="2"> T/O </th>';
+	echo '<th colspan="2"> LDG</th>';
+	echo '<th colspan="2"> Op. Time</th>';
+	echo '<th colspan="4"> Pilot Function Time</th>';
+	echo '<th rowspan="2"> Remarks</th>';
 	echo '</tr>';
 	echo '<tr>';
-	echo '<th> in carico</th>';
-	echo '<th> inviata</th>';
-	echo '<th> evasa</th>';
+	echo '<th>Aeroporto</th>';
+	echo '<th>Orario</th>';
+	echo '<th>Aeroporto</th>';
+	echo '<th>Orario</th>';
+	echo '<th>Modello</th>';
+	echo '<th>Marche</th>';
+	echo '<th>D</th>';
+	echo '<th>N</th>';
+	echo '<th>D</th>';
+	echo '<th>N</th>';
+	echo '<th>Night</th>';
+	echo '<th>IFR</th>';
+	echo '<th>PIC</th>';
+	echo '<th>Cop.</th>';
+	echo '<th>Dual</th>';
+	echo '<th>Instr.</th>';
 	echo '</tr>';
 	
 }
 
 
 function html_voli($tabella){
-	global $mandamenti, $titoli;
-	$tipoOrdinamento    = "asc";
-	$tipoOrdinamentoNew = "asc";
-	$ordinamento        = "data";
-	if(isset($_GET['quali'])){
-		$titolo = $titoli[$_GET['quali']];
-		$quali=$_GET['quali'];
-	}else{
-		$titolo = $titoli['aperte'];
-		$quali='aperte';
-	}
 
-	if(isset($_GET['ord'])){
-		$ordinamento = $_GET['ord'];
-	}
-
-	if(isset($_GET['tipo'])){
-		$tipoOrdinamento = $_GET['tipo'];	
-		if($tipoOrdinamento == "asc") $tipoOrdinamentoNew="desc";
-		else $tipoOrdinamentoNew="asc";
-	}
-
-	
-
-	echo '<h3>'. $titolo . '</h3>';
-	echo '<h3> <a href="index.php?new"> Inserisci una nuova volo</a> -  <a href="index.php?logout">Logout</a> </h3>';
-	if(count ($tabella)==0)echo '<h1> Nessuna volo presente</h1>';
+	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
 		echo '<table border="1"> ';
-		html_headerRow($quali,$tipoOrdinamento,$tipoOrdinamentoNew);
+		html_headerRow();
 		$countRow=0;	
 		foreach ($tabella as $riga)	{
-			if(++$countRow== 15) html_headerRow($quali,$tipoOrdinamento,$tipoOrdinamentoNew);
+			if(++$countRow== 15) html_headerRow();
 			echo '<tr>';
 			echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
-			echo '<td>' . $mandamenti[$riga['mandamento']]['label']  . '</td>';
-			echo '<td>' . $riga['data'] . '</td>';
-			echo '<td>' . $riga['au'] . '</td>';
-			echo '<td>' . $riga['ragsoc'] . '</td>';
-			echo '<td>' . $riga['rea'] . '</td>';
-			echo '<td>' . $riga['indirizzo'] . '</td>';
-			echo '<td>' . $riga['protocollo'] . '</td>';
-			echo '<td>' . $riga['pec_attiva'] . '</td>';
-			echo '<td>' . $riga['cns_richiesta'] . '</td>';
-			echo '<td>' . $riga['cns_attiva'] . '</td>';
-			echo '<td>' . $riga['comunica_incarico'] . '</td>';
-			echo '<td>' . $riga['comunica_invia'] . '</td>';
-			echo '<td>' . $riga['comunica_evasa'] . '</td>';
-			echo '<td>' . $riga['note'] . '</td>';
-			echo '<td>' . $riga['chiusura'] . '</td>';
+			echo '<td>' . $riga['data']  . '</td>';
+			echo '<td>' . $riga['depplace'] . '</td>';
+			echo '<td>' . $riga['deptime'] . '</td>';
+			echo '<td>' . $riga['arrplace'] . '</td>';
+			echo '<td>' . $riga['arrtime'] . '</td>';
+			echo '<td>' . $riga['acftmodel'] . '</td>';
+			echo '<td>' . $riga['acftreg'] . '</td>';
+			echo '<td>' . $riga['spt'] . '</td>';
+			echo '<td>' . $riga['multipilot'] . '</td>';
+			echo '<td>' . $riga['totalflighttime'] . '</td>';
+			echo '<td>' . $riga['picname'] . '</td>';
+			echo '<td>' . $riga['today'] . '</td>';
+			echo '<td>' . $riga['tonight'] . '</td>';
+			echo '<td>' . $riga['ldgday'] . '</td>';
+			echo '<td>' . $riga['ldgnight'] . '</td>';
+			echo '<td>' . $riga['nighttime'] . '</td>';
+			echo '<td>' . $riga['ifrtime'] . '</td>';
+			echo '<td>' . $riga['pictime'] . '</td>';
+			echo '<td>' . $riga['coptime'] . '</td>';
+			echo '<td>' . $riga['dualtime'] . '</td>';
+			echo '<td>' . $riga['instrtime'] . '</td>';
+			echo '<td>' . $riga['rmks'] . '</td>';
 			echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
 			echo '</tr>';
 		}
 		echo '</table> ';
 	}
-	echo '<a href="index.php?quali=aperte"> Lista voli aperte</a>  - <a href="index.php?quali=chiuse"> Lista voli chiuse</a>  - <a href="index.php?quali=tutte"> Lista completa voli </a>';
 }
 
 function html_volo($tabella=Array()){
-	global $mandamenti;
 	$tabella['nuovo'] ='N';
 	if(!isset($tabella['mandamento'])){
 		$tabella = Array(

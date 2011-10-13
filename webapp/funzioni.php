@@ -28,70 +28,36 @@ function verificaPassword($username, $password){
 
 function pagina(){
 	// Costruzione della pagina
-	if(isset($_GET['pk'])){										#richiamo la pagina della volo per la modifica
+	if(isset($_GET['pk'])){										#richiamo la pagina del volo per la modifica
 		$volo=getVolo($_GET['pk']);
 		html_volo($volo);
-	}else if(isset($_GET['new'])){ 								#richiamo la pagina della volo per l'inserimento
+	}else if(isset($_GET['new'])){ 								#richiamo la pagina del volo per l'inserimento
 		html_volo();
-	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo la volo nuova e la inserisco
+	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo il volo nuovo e lo inserisco
 		$volo=insertVolo($_POST);
 		html_volo($volo);
 	
-	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo la volo vecchia e la modifico	
+	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo il volo vecchio e lo modifico	
 		$volo=updateVolo($_POST);
 		html_volo($volo);
-	}else{ 														#mostro l'elenco delle voli
+	}else{ 														#mostro l'elenco dei voli
 		$tabella=getVoli();
 		html_voli($tabella);
 	}
 	
 }
 
-function getVoli($quali="aperte"){
-	global $sqlVoli, $sqlVoliMandamento, $db;
-	$ordinamento="data";
-	$tipoOrdinamento="asc";
-	if($_SESSION['ruolo']==COSTANTE_ADMIN || $_SESSION['ruolo']==COSTANTE_ATTIV)
-		$sql=$sqlVoli;
-	else{
-		$sql=$sqlVoliMandamento;
- 		$sql=str_replace(COSTANTE_MANDAMENTO,$db->quote($_SESSION['mandamento'], 'text'), $sql);
-	}
+function getVoli(){
+	global $sqlVoli, $db;
+	$sql=$sqlVoli;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
 
-	$orderClause="";
-	if(isset($_GET['ord'])){
-		$orderClause .= "order by " . $_GET['ord'];
-		$ordinamento = $_GET['ord'];
-	}else{
-		$orderClause="order by data";
-	}
-
-	if(isset($_GET['tipo'])){
-		$orderClause .= " " . $_GET['tipo'];
-		$tipoOrdinamento = $_GET['tipo'];
-	}
-
-	$sql=str_replace(COSTANTE_ORDER, $orderClause, $sql);
-	if(isset($_GET['quali'])){
-		switch ($_GET['quali']){
-			case "tutte":
-				$sql=str_replace(COSTANTE_LIMITE, "and true", $sql);
-				break;
-			case "aperte":
-				$sql=str_replace(COSTANTE_LIMITE, "and chiusura='". FALSE . "'", $sql);
-				break;
-			case "chiuse":
-				$sql=str_replace(COSTANTE_LIMITE, "and chiusura='". TRUE . "'", $sql);
-				break;
-		}
-	}
-	else{
-		$sql=str_replace(COSTANTE_LIMITE, "and chiusura='". FALSE . "'", $sql);
-	}
 	$res=$db->query($sql);
 
 	if (PEAR::isError($res)) {
-	//	var_dump($res);
+		var_dump ($sql);
+		//var_dump($res);
+		
 		errore("getVoli - ".$res->getUserInfo());
 	}
 	$voli =Array();	

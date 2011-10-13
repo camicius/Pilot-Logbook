@@ -5,10 +5,10 @@ $config="ok";
 	Dati di connessione al db e a ldap
 */
 define('DB_HOST',   'localhost');
-define('DB_PORT',   '5432');
-define('DB_USER',   'postgres');
+define('DB_PORT',   '6543');
+define('DB_USER',   'prjadmin');
 define('DB_PSW',    '');
-define('DB_SCHEMA', 'default');
+define('DB_SCHEMA', 'metopack');
 
 /*
 	importazione librerie di accesso al db
