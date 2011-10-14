@@ -6,7 +6,7 @@ if(!isset ($config)){ exit(127);}
 
 
 define ('COSTANTE_USER', '%%USER%%');
-$sqlVoli='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
+$sqlVoli='SELECT pk, data, depplace, arrplace, to_char(deptime, \'HH24MI\'), to_char(arrtime, \'HH24MI\'), acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
 
 
 
@@ -18,7 +18,8 @@ $sqlOldPIC    = 'select distinct picname   from dat.logbook WHERE username=%%USE
 
 
 define ('COSTANTE_PK', '%%PK%%');
-$sqlVolo='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE pk=%%PK%% ';
+$sqlVolo='SELECT pk, data, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, totalflighttime = pictime as pictimebool, totalflighttime = coptime as coptimebool, totalflighttime = dualtime as dualtimebool, totalflighttime = instrtime as instrtimebool, 
+ rmks, user FROM dat.logbook WHERE pk=%%PK%% ';
 
 define ('COSTANTE_DATA',            '%%DATA%%');
 define ('COSTANTE_DEPPLACE',        '%%DEPPLACE%%');
