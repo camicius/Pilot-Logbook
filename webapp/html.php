@@ -169,7 +169,7 @@ function html_volo($tabella=Array(), $oldies){
 	echo '<tr><th rowspan="2">Aeroplano</th><th>modello</th><td>'                   . html_text_and_old      ('acftmodel',  $oldies['models'],   $tabella['acftmodel'])     . '</td></tr>';
 	echo '<tr><th>marche</th><td>'                                                  . html_text_and_old      ('acftreg',    $oldies['regs'],     $tabella['acftreg'])       . '</td></tr>';
 	echo '<tr><th colspan="2">S.P.T. (SE/ME)</th><td>'                              . html_radio             ('spt',        $options['spt'],     $tabella['spt'])           . '</td></tr>';
-	echo '<tr><th colspan="2">Multi Pilot</th><td>'                                 . html_checkbox          ('multipilot',                      $tabella['multipilot'])    . '</td></tr>';
+	echo '<tr><th colspan="2">Multi Pilot</th><td>'                                 . html_checkbox          ('multipilot',                      $tabella['multipilotbool']). '</td></tr>';
 	echo '<tr><th colspan="2">Nome del PIC</th><td>'                                . html_text_and_old      ('picname',    $oldies['pic'] ,     $tabella['picname'])       . '</td></tr>';
 	echo '<tr><th rowspan="2">Decolli</th><th>giorno</th><td>'                      . html_number            ('today',                           $tabella['today'])         . '</td></tr>';
 	echo '<tr><th>notte</th><td>'                                                   . html_number            ('tonight',                         $tabella['tonight'])       . '</td></tr>';
@@ -177,10 +177,7 @@ function html_volo($tabella=Array(), $oldies){
 	echo '<tr><th>notte</th><td>'                                                   . html_number            ('ldgnight',                        $tabella['ldgnight'])      . '</td></tr>';
 	echo '<tr><th rowspan="2">Op. Time</th><th>notturno</th><td>'                   . html_time              ('nighttime',                       $tabella['nighttime'])     . '</td></tr>';
 	echo '<tr><th>IFR</th><td>'                                                     . html_time              ('ifrtime',                         $tabella['ifrtime'])       . '</td></tr>';
-	echo '<tr><th rowspan="4">Pilot <br />Function <br />Time</th><th>PIC</th><td>' . html_checkbox_and_text ('pictime',  $tabella['pictime'],   $tabella['pictimebool'])   . '</td></tr>';
-	echo '<tr><th>Copilot</th><td>'                                                 . html_checkbox_and_text ('coptime',  $tabella['coptime'],   $tabella['coptimebool'])   . '</td></tr>';
-	echo '<tr><th>Dual</th><td>'                                                    . html_checkbox_and_text ('dualtime', $tabella['dualtime'],  $tabella['dualtimebool'])  . '</td></tr>';
-	echo '<tr><th>Instructor</th><td>'                                              . html_checkbox_and_text ('instrtime',$tabella['instrtime'], $tabella['instrtimebool']) . '</td></tr>';
+	echo '<tr><th colspan="2">Pilot <br />Function <br />Time</th><td>'             . html_radio             ('function', $options['function'],  $tabella['function'])      . '</td></tr>';
 	echo '<tr><th colspan="2">Remarks</th><td>'                                     . html_number            ('rmks',                            $tabella['rmks'])          . '</td></tr>';
 
 
