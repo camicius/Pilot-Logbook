@@ -8,7 +8,10 @@ function html_header(){
 	echo '<head>';
 	echo '	<title>Private Pilot Logbook</title>';
 	echo '	<link href="style.css" rel="stylesheet" type="text/css">';
-	echo '<head>';
+	echo '	<link type="text/css" rel="stylesheet" href="dhtmlgoodies_calendar/dhtmlgoodies_calendar.css?random=20051112" media="screen"></link>';
+	echo '	<script type="text/javascript" src="dhtmlgoodies_calendar/dhtmlgoodies_calendar.js?random=20060118"></script>';
+
+	echo '</head>';
 	echo '<body>';
 
 
@@ -219,7 +222,7 @@ function html_checkbox( $name, $value=FALSE){
 
 function html_data( $name, $value=''){
 	$string="";
-	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	$string .='	<input value="' . $value . '" readonly="readonly" name="' . $name . '" type="text" /><input value="Cal" onclick="displayCalendar(document.forms[0].' . $name . ',\'yyyy-mm-dd\',this)" type="button" />';
 	return $string;
 }
 

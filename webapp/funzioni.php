@@ -206,35 +206,40 @@ function insertVolo($volo){
 function updateVolo($volo){
 	global $sqlUpdateVolo, $db;
 	$sql=$sqlUpdateVolo;
-
-
-	$volo['pec_attiva']=        formToDB($volo,'pec_attiva');
-	$volo['cns_richiesta']=     formToDB($volo,'cns_richiesta');
-	$volo['cns_attiva']=        formToDB($volo,'cns_attiva');
-	$volo['comunica_incarico']= formToDB($volo,'comunica_incarico');
-	$volo['comunica_invia']=    formToDB($volo,'comunica_invia');
-	$volo['comunica_evasa']=    formToDB($volo,'comunica_evasa');
-	$volo['chiusura']=          formToDB($volo,'chiusura');
-
-	$sql=str_replace(COSTANTE_PK,           $db->quote($volo['pk'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($volo['mandamento'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_UTENTE,       $db->quote($_SESSION['username'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_AU,           $db->quote($volo['au'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($volo['ragsoc'],             'text'), $sql);
-	$sql=str_replace(COSTANTE_REA,          $db->quote($volo['rea'],                'text'), $sql);
-	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($volo['indirizzo'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($volo['protocollo'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($volo['pec_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($volo['cns_richiesta'],      'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($volo['cns_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($volo['comunica_incarico'],  'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($volo['comunica_invia'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($volo['comunica_evasa'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_NOTE,         $db->quote($volo['note'],               'text'), $sql);
-	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($volo['chiusura'] ,          'text'), $sql);
 	
+	echo'	<pre>';
+	var_dump($_POST);
 
 
+
+
+
+	$sql=str_replace(COSTANTE_PK,              $db->quote($volo['pk'],              'text'), $sql);
+	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'text'), $sql);
+	$sql=str_replace(COSTANTE_DEPPLACE,        $db->quote($volo['depplace'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_ARRPLACE,        $db->quote($volo['arrplace'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptime'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtime'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_ACFTMODEL,       $db->quote($volo['acftmodel'],       'text'), $sql);
+	$sql=str_replace(COSTANTE_ACFTREG,         $db->quote($volo['acftreg'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_SPT,             $db->quote($volo['spt'],             'text'), $sql);
+	$sql=str_replace(COSTANTE_TOTALFLIGHTTIME, $db->quote($volo['totalflighttime'], 'text'), $sql);
+	$sql=str_replace(COSTANTE_PICNAME,         $db->quote($volo['picname'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_TODAY,           $db->quote($volo['today'],           'text'), $sql);
+	$sql=str_replace(COSTANTE_TONIGHT,         $db->quote($volo['tonight'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_LDGDAY,          $db->quote($volo['ldgday'],          'text'), $sql);
+	$sql=str_replace(COSTANTE_LDGNIGHT,        $db->quote($volo['ldgnight'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_NIGHTTIME,       $db->quote($volo['nighttime'] ,      'text'), $sql);
+	$sql=str_replace(COSTANTE_IFRTIME,         $db->quote($volo['ifrtime'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_PICTIME,         $db->quote($volo['pictime'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_COPTIME,         $db->quote($volo['coptime'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_DUALTIME,        $db->quote($volo['dualtime'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_INSTRTIME,       $db->quote($volo['instrtime'],       'text'), $sql);
+	$sql=str_replace(COSTANTE_RMKS,            $db->quote($volo['rmks'] ,           'text'), $sql);
+	
+	print $sql;
+	echo'	</pre>';
+	exit;
 
 	$res=$db->query($sql);
 
