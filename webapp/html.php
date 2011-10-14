@@ -148,7 +148,7 @@ function html_volo($tabella=Array(), $oldies){
 		);	
 	}
 	echo '<table border=1> ';
-	echo '<form action="index.php" method="post" enctype="multipart/form-data">';
+	echo '<form action="index.php" method="post" name="volo" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="nuovo" value="' . $tabella['nuovo'] . '" />';
 	if (isset($tabella['pk'])) echo '<input type="hidden" name="pk" value="' . $tabella['pk'] . '" />';
 
@@ -227,8 +227,9 @@ function html_number( $name, $value=''){
 }
 function html_text_and_old( $name, $oldValues, $value=''){
 	$string="";
-	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
-	$string .='<select  name="' . $name . '" >';
+	$string .='<input name="' . $name . '" type="text" value="' . $value . ' "></input>';
+	$string .='<select  name="' . $name . 'old" onchange="if(this.options[this.selectedIndex].value != \'NIL\') document.volo.' . $name . '.value=this.options[this.selectedIndex].value;">';
+	$string .= '  <option value="NIL" label="Recent Entries" selected="selected">Recent Entries</option>';
 	foreach ($oldValues as $old){
 		$string .= '  <option value="' . $old . '" label="' . $old . '">' . $old . '</option>';
 	} 
@@ -236,5 +237,4 @@ function html_text_and_old( $name, $oldValues, $value=''){
 	
 	return $string;
 }
-
 ?> 
