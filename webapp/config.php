@@ -37,6 +37,7 @@ define('FALSE',     'N');
 require_once 'sql.php';
 require_once 'html.php';
 require_once 'funzioni.php';
+require 'php-sdk/src/facebook.php';
 /*
 	connessione al db
 */
