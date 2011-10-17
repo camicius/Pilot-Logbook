@@ -8,7 +8,10 @@ function html_header(){
 	echo '<head>';
 	echo '	<title>Private Pilot Logbook</title>';
 	echo '	<link href="style.css" rel="stylesheet" type="text/css">';
-	echo '<head>';
+	echo '	<link type="text/css" rel="stylesheet" href="dhtmlgoodies_calendar/dhtmlgoodies_calendar.css?random=20051112" media="screen"></link>';
+	echo '	<script type="text/javascript" src="dhtmlgoodies_calendar/dhtmlgoodies_calendar.js?random=20060118"></script>';
+
+	echo '</head>';
 	echo '<body>';
 
 
@@ -147,39 +150,40 @@ function html_volo($tabella=Array(), $oldies){
 			'nuovo'             => booleanToDB(true),
 		);	
 	}
+	//echo "<pre>";
+	//var_dump($tabella);
+	//echo "</pre>";
 	echo '<table border=1> ';
-	echo '<form action="index.php" method="post" enctype="multipart/form-data">';
+	echo '<form action="index.php" method="post" name="volo" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="nuovo" value="' . $tabella['nuovo'] . '" />';
 	if (isset($tabella['pk'])) echo '<input type="hidden" name="pk" value="' . $tabella['pk'] . '" />';
 
 	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: #00ff00;" colspan="2">' . $tabella['messaggio'] . '</th></tr>';
-	var_dump($tabella);
-	var_dump($oldies);
 
-	echo '<tr><th colspan="2">Data</th><td>'                                        . html_data         ('data',                          $tabella['data'])       . '</td></tr>';
-	echo '<tr><th rowspan="2">Partenza</th><th>aeroporto</th><td>'                  . html_text_and_old ('depplace',   $oldies['places'], $tabella['depplace'])   . '</td></tr>';
-	echo '<tr><th>orario</th><td>'                                                  . html_time         ('deptime',                       $tabella['deptime'])    . '</td></tr>';
-	echo '<tr><th rowspan="2">Arrivo</th><th>aeroporto</th><td>'                    . html_text_and_old ('arrplace',   $oldies['places'], $tabella['arrplace'])   . '</td></tr>';
-	echo '<tr><th>orario</th><td>'                                                  . html_time         ('arrtime',                       $tabella['arrtime'])    . '</td></tr>';
-	echo '<tr><th rowspan="2">Aeroplano</th><th>modello</th><td>'                   . html_text_and_old ('acftmodel',  $oldies['models'], $tabella['acftmodel'])  . '</td></tr>';
-	echo '<tr><th>marche</th><td>'                                                  . html_text_and_old ('acftreg',    $oldies['regs'],   $tabella['acftreg'])    . '</td></tr>';
-	echo '<tr><th colspan="2">S.P.T. (SE/ME)</th><td>'                              . html_combobox     ('spt',        $options['spt'],   $tabella['spt'])        . '</td></tr>';
-	echo '<tr><th colspan="2">Multi Pilot</th><td>'                                 . html_checkbox     ('multipilot',                    $tabella['multipilot']) . '</td></tr>';
-	echo '<tr><th colspan="2">Nome del PIC</th><td>'                                . html_text_and_old ('picname',    $oldies['pic'] ,   $tabella['picname'])    . '</td></tr>';
-	echo '<tr><th rowspan="2">Decolli</th><th>giorno</th><td>'                      . html_number       ('today',                         $tabella['today'])      . '</td></tr>';
-	echo '<tr><th>notte</th><td>'                                                   . html_number       ('tonight',                       $tabella['tonight'])    . '</td></tr>';
-	echo '<tr><th rowspan="2">Atterraggi</th><th>giorno</th><td>'                   . html_number       ('ldgday',                        $tabella['ldgday'])     . '</td></tr>';
-	echo '<tr><th>notte</th><td>'                                                   . html_number       ('ldgnight',                      $tabella['ldgnight'])   . '</td></tr>';
-	echo '<tr><th rowspan="2">Op. Time</th><th>notturno</th><td>'                   . html_time         ('nigthtime',                     $tabella['nigthtime'])  . '</td></tr>';
-	echo '<tr><th>IFR</th><td>'                                                     . html_time         ('ifrtime',                       $tabella['ifrtime'])    . '</td></tr>';
-	echo '<tr><th rowspan="4">Pilot <br />Function <br />Time</th><th>PIC</th><td>' . html_checkbox     ('pictime',                       $tabella['pictime'])    . '</td></tr>';
-	echo '<tr><<th>Copilot</th><td>'                                                . html_checkbox     ('coptime',                       $tabella['coptime'])    . '</td></tr>';
-	echo '<tr><th>Dual</th><td>'                                                    . html_checkbox     ('dualtime',                      $tabella['dualtime'])   . '</td></tr>';
-	echo '<tr><th>Instructor</th><td>'                                              . html_checkbox     ('instrtime',                     $tabella['instrtime'])  . '</td></tr>';
-	echo '<tr><th colspan="2">Remarks</th><td>'                                     . html_number       ('rmks',                          $tabella['rmks'])       . '</td></tr>';
+
+	echo '<tr><th colspan="2">Data</th><td>'                                        . html_data              ('data',                            $tabella['data'])          . '</td></tr>';
+	echo '<tr><th rowspan="2">Partenza</th><th>aeroporto</th><td>'                  . html_text_and_old      ('depplace',   $oldies['places'],   $tabella['depplace'])      . '</td></tr>';
+	echo '<tr><th>orario</th><td>'                                                  . html_time              ('deptime',                         $tabella['deptime'])       . '</td></tr>';
+	echo '<tr><th rowspan="2">Arrivo</th><th>aeroporto</th><td>'                    . html_text_and_old      ('arrplace',   $oldies['places'],   $tabella['arrplace'])      . '</td></tr>';
+	echo '<tr><th>orario</th><td>'                                                  . html_time              ('arrtime',                         $tabella['arrtime'])       . '</td></tr>';
+	echo '<tr><th rowspan="2">Aeroplano</th><th>modello</th><td>'                   . html_text_and_old      ('acftmodel',  $oldies['models'],   $tabella['acftmodel'])     . '</td></tr>';
+	echo '<tr><th>marche</th><td>'                                                  . html_text_and_old      ('acftreg',    $oldies['regs'],     $tabella['acftreg'])       . '</td></tr>';
+	echo '<tr><th colspan="2">S.P.T. (SE/ME)</th><td>'                              . html_radio             ('spt',        $options['spt'],     $tabella['spt'])           . '</td></tr>';
+	echo '<tr><th colspan="2">Multi Pilot</th><td>'                                 . html_checkbox          ('multipilot',                      $tabella['multipilotbool']). '</td></tr>';
+	echo '<tr><th colspan="2">Nome del PIC</th><td>'                                . html_text_and_old      ('picname',    $oldies['pic'] ,     $tabella['picname'])       . '</td></tr>';
+	echo '<tr><th rowspan="2">Decolli</th><th>giorno</th><td>'                      . html_number            ('today',                           $tabella['today'])         . '</td></tr>';
+	echo '<tr><th>notte</th><td>'                                                   . html_number            ('tonight',                         $tabella['tonight'])       . '</td></tr>';
+	echo '<tr><th rowspan="2">Atterraggi</th><th>giorno</th><td>'                   . html_number            ('ldgday',                          $tabella['ldgday'])        . '</td></tr>';
+	echo '<tr><th>notte</th><td>'                                                   . html_number            ('ldgnight',                        $tabella['ldgnight'])      . '</td></tr>';
+	echo '<tr><th rowspan="2">Op. Time</th><th>notturno</th><td>'                   . html_time              ('nighttime',                       $tabella['nighttime'])     . '</td></tr>';
+	echo '<tr><th>IFR</th><td>'                                                     . html_time              ('ifrtime',                         $tabella['ifrtime'])       . '</td></tr>';
+	echo '<tr><th colspan="2">Pilot <br />Function <br />Time</th><td>'             . html_radio             ('function', $options['function'],  $tabella['function'])      . '</td></tr>';
+	echo '<tr><th colspan="2">Remarks</th><td>'                                     . html_number            ('rmks',                            $tabella['rmks'])          . '</td></tr>';
 
 
 
+	if($tabella['nuovo'] == booleanToDB(true))	echo '<tr><th colspan="3"><input type="submit" value="Inserisci volo" /></th></tr>';
+	else echo '<tr><th colspan="3"><input type="submit" value="Aggiorna volo" /></th></tr>';
 
 	echo '</form>';
 	echo '</table> ';
@@ -188,7 +192,7 @@ function html_volo($tabella=Array(), $oldies){
 }
 function html_combobox($name, $options, $selezionato=""){
 	$string="";
-	$string.= '<select name="mandamento"> ';
+	$string.= '<select name="'.$name.'"> ';
 	foreach ($options as $option){
 		if($selezionato==$option['value']) $string.=  '<option value="'.$option['value'].'" name="'.$option['value'].'" selected="selected">'.$option['label'].' </option>';
 		else $string.=  '<option value="'.$option['value'].'" name="'.$option['value'].'"> '.$option['label'].'</option>';
@@ -196,6 +200,16 @@ function html_combobox($name, $options, $selezionato=""){
 	$string.=  '</select> ';
 	return $string;
 }
+function html_radio($name, $options, $selezionato=""){
+	$string="";
+	foreach ($options as $option){
+		if($selezionato==$option) $string.=  '<input type="radio" value="'.$option.'" name="'.$name.'" checked="checked">'.$option.' </input>';
+		else $string.=  '<input type="radio" value="'.$option.'" name="'.$name.'"> '.$option.'</input>';
+  	}
+	$string.=  '</select> ';
+	return $string;
+}
+
 function html_checkbox( $name, $value=FALSE){
 	$string="";
 	if ($value == booleanToDB(true)) $string .=  "<input type='checkbox' name='$name' checked='checked' />";
@@ -203,9 +217,9 @@ function html_checkbox( $name, $value=FALSE){
 	return $string;
 }
 
-function html_data( $name, $value=FALSE){
+function html_data( $name, $value=''){
 	$string="";
-	//$string .='<input name="' . $name . '" type="text" value="' . $tabella[$name] . '"></input>';
+	$string .='	<input value="' . $value . '" readonly="readonly" name="' . $name . '" type="text" /><input value="Cal" onclick="displayCalendar(document.forms[0].' . $name . ',\'yyyy-mm-dd\',this)" type="button" />';
 	return $string;
 }
 
@@ -227,14 +241,23 @@ function html_number( $name, $value=''){
 }
 function html_text_and_old( $name, $oldValues, $value=''){
 	$string="";
-	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
-	$string .='<select  name="' . $name . '" >';
+	$string .='<input name="' . $name . '" type="text" value="' . $value . ' "></input>';
+	$string .='<select  name="' . $name . 'old" onchange="if(this.options[this.selectedIndex].value != \'NIL\') document.volo.' . $name . '.value=this.options[this.selectedIndex].value;">';
+	$string .= '  <option value="NIL" label="Recent Entries" selected="selected">Recent Entries</option>';
 	foreach ($oldValues as $old){
 		$string .= '  <option value="' . $old . '" label="' . $old . '">' . $old . '</option>';
 	} 
 	$string .='</select>';
 	
 	return $string;
+}
+function html_checkbox_and_text( $name, $value, $valueBool=FALSE){
+	$string="";
+	if ($valueBool =="t" || $valueBool== booleanToDB(true)) $string .=  "<input type='checkbox' name='". $name."bool' checked='checked' />";
+	else $string .=  "<input type='checkbox' name='". $name."bool' />";
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
+	return $string;
+
 }
 
 ?> 

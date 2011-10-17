@@ -6,7 +6,7 @@ if(!isset ($config)){ exit(127);}
 
 
 define ('COSTANTE_USER', '%%USER%%');
-$sqlVoli='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
+$sqlVoli='SELECT pk, data, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
 
 
 
@@ -18,7 +18,8 @@ $sqlOldPIC    = 'select distinct picname   from dat.logbook WHERE username=%%USE
 
 
 define ('COSTANTE_PK', '%%PK%%');
-$sqlVolo='SELECT pk, data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE pk=%%PK%% ';
+$sqlVolo='SELECT pk, data, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, totalflighttime = multipilot as multipilotbool, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, totalflighttime = pictime as pictimebool, totalflighttime = coptime as coptimebool, totalflighttime = dualtime as dualtimebool, totalflighttime = instrtime as instrtimebool, 
+ rmks, user FROM dat.logbook WHERE pk=%%PK%% ';
 
 define ('COSTANTE_DATA',            '%%DATA%%');
 define ('COSTANTE_DEPPLACE',        '%%DEPPLACE%%');
@@ -46,13 +47,14 @@ $sqlInsertVolo='INSERT INTO dat.logbook(data, "depPlace", "arrPlace", "depTime",
     VALUES (%%DATA%%, %%DEPPLACE%%,  %%ARRPLACE%%, %%DEPTIME%%, %%ARRTIME%%, %%ACFTMODEL%%, %%ACFTREG%%, %%SPT%%,%%MULTIPILOT%%, %%TOTALFLIGHTTIME%%, %%PICNAME%%, %%TODAY%%, %%TONIGHT%%, %%LDGDAY%%, %%LDGNIGHT%%, %%NIGHTTIME%%, %%IFRTIME%%, %%PICTIME%%, %%COPTIME%%, %%DUALTIME%%, %%INSTRTIME%%, %%RMKS%%)';
 
 
+
 $sqlUpdateVolo='UPDATE dat.logbook
-   SET data=%%DATA%%, "depPlace"=%%DEPPLACE%%, "arrPlace"=%%ARRPLACE%%, "depTime"=%%DEPTIME%%, "arrTime"=%%ARRTIME%%, 
-       "acftModel"=%%ACFTMODEL%%, "acftReg"=%%ACFTREG%%, spt=%%SPT%%, "multiPilot"=%%MULTIPILOT%%, "totalFlightTime"=%%TOTALFLIGHTTIME%%, 
-       "picName"=%%PICNAME%%, "toDay"=%%TODAY%%, "toNight"=%%TONIGHT%%, "ldgDay"=%%LDGDAY%%, "ldgNight"=%%LDGNIGHT%%, 
-       "nightTime"=%%NIGHTTIME%%, "ifrTime"=%%IFRTIME%%, "picTime"=%%PICTIME%%, "copTime"=%%COPTIME%%, "dualTime"=%%DUALTIME%%, 
-       "instrTime"=%%INSTRTIME%%, rmks=%%RMKS%%, "user"=%%USER%%
- WHERE PK=%%PK%%';
+   SET data=%%DATA%%, depplace=%%DEPPLACE%%, arrplace=%%ARRPLACE%%, deptime=%%DEPTIME%%, arrtime=%%ARRTIME%%, 
+       acftmodel=%%ACFTMODEL%%, acftreg=%%ACFTREG%%, spt=%%SPT%%, multipilot=%%MULTIPILOT%%, totalflighttime=%%TOTALFLIGHTTIME%%, 
+       picname=%%PICNAME%%, today=%%TODAY%%, tonight=%%TONIGHT%%, ldgday=%%LDGDAY%%, ldgnight=%%LDGNIGHT%%, 
+       nighttime=%%NIGHTTIME%%, ifrtime=%%IFRTIME%%, pictime=%%PICTIME%%, coptime=%%COPTIME%%, dualtime=%%DUALTIME%%, 
+       instrtime=%%INSTRTIME%%, rmks=%%RMKS%% 
+ WHERE PK=%%PK%% and username=%%USER%%' ;
 
 $sqlDeleteVolo='DELETE FROM dat.logbook WHERE PK=%%PK%%';
 
