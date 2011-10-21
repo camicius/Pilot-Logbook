@@ -166,48 +166,63 @@ function insertVolo($volo){
 	//print_r($volo);
 	global $sqlInsertVolo, $db;
 	$sql=$sqlInsertVolo;
-
-	if($volo['protocollo']=="") $volo['pec_attiva']=booleanToDB(true);
-	$volo['pec_attiva']=        formToDB($volo,'pec_attiva');
-	$volo['cns_richiesta']=     formToDB($volo,'cns_richiesta');
-	$volo['cns_attiva']=        formToDB($volo,'cns_attiva');
-	$volo['comunica_incarico']= formToDB($volo,'comunica_incarico');
-	$volo['comunica_invia']=    formToDB($volo,'comunica_invia');
-	$volo['comunica_evasa']=    formToDB($volo,'comunica_evasa');
-	$volo['chiusura']=          formToDB($volo,'chiusura');
-
-	$sql=str_replace(COSTANTE_MANDAMENTO,   $db->quote($volo['mandamento'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_UTENTE,       $db->quote($_SESSION['username'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_AU,           $db->quote($volo['au'],                 'text'), $sql);
-	$sql=str_replace(COSTANTE_RAGSOC,       $db->quote($volo['ragsoc'],             'text'), $sql);
-	$sql=str_replace(COSTANTE_REA,          $db->quote($volo['rea'],                'text'), $sql);
-	$sql=str_replace(COSTANTE_INDIRIZZO,    $db->quote($volo['indirizzo'],          'text'), $sql);
-	$sql=str_replace(COSTANTE_PROTOCOLLO,   $db->quote($volo['protocollo'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_PECATTIVA,    $db->quote($volo['pec_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSRICHIESTA, $db->quote($volo['cns_richiesta'],      'text'), $sql);
-	$sql=str_replace(COSTANTE_CNSATTIVA,    $db->quote($volo['cns_attiva'],         'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINCARICO,  $db->quote($volo['comunica_incarico'],  'text'), $sql);
-	$sql=str_replace(COSTANTE_COMINVIA,     $db->quote($volo['comunica_invia'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_COMEVASA,     $db->quote($volo['comunica_evasa'],     'text'), $sql);
-	$sql=str_replace(COSTANTE_NOTE,         $db->quote($volo['note'],               'text'), $sql);
-	$sql=str_replace(COSTANTE_CHIUSURA,     $db->quote($volo['chiusura'] ,          'text'), $sql);
+	
+//	echo'	<pre>';
+//	var_dump($volo);
+	
+	$depHour = intval(substr($volo['deptime'], 0, 2));
+	$depMin  = intval(substr($volo['deptime'], 2, 2));
+	$arrHour = intval(substr($volo['arrtime'], 0, 2));
+	$arrMin  = intval(substr($volo['arrtime'], 2, 2));
+	$volo['totalflighttime']=$arrHour*60+$arrMin-($depHour*60+$depMin);
 
 
+	$volo['deptime']= $volo['data'] . " " . substr($volo['deptime'], 0, 2) . ":" . substr($volo['deptime'], 2, 2);
+	$volo['arrtime']= $volo['data'] . " " . substr($volo['arrtime'], 0, 2) . ":" . substr($volo['arrtime'], 2, 2);
+	if($volo['multipilot']= formToDB($volo,'multipilot')==booleanToDB(true))$volo['multipilot']= $volo['totalflighttime']; else $volo['multipilot']  = 0;;
 
-
+	if($volo['function']==PIC)  $volo['pictime']=  $volo['totalflighttime']; else $volo['pictime']  =0;
+	if($volo['function']==COP)  $volo['coptime']=  $volo['totalflighttime']; else $volo['coptime']  =0;	
+	if($volo['function']==DUAL) $volo['dualtime']= $volo['totalflighttime']; else $volo['dualtime'] =0;
+	if($volo['function']==INSTR)$volo['instrtime']=$volo['totalflighttime']; else $volo['instrtime']=0;
+//	var_dump($volo);
+	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'date'), $sql);
+	$sql=str_replace(COSTANTE_DEPPLACE,        $db->quote($volo['depplace'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_ARRPLACE,        $db->quote($volo['arrplace'],        'text'), $sql);
+	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptime'],         'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtime'],         'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_ACFTMODEL,       $db->quote($volo['acftmodel'],       'text'), $sql);
+	$sql=str_replace(COSTANTE_ACFTREG,         $db->quote($volo['acftreg'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_SPT,             $db->quote($volo['spt'],             'text'), $sql);
+	$sql=str_replace(COSTANTE_MULTIPILOT,      $db->quote($volo['multipilot'],      'integer' ), $sql);
+	$sql=str_replace(COSTANTE_TOTALFLIGHTTIME, $db->quote($volo['totalflighttime'], 'integer' ), $sql);
+	$sql=str_replace(COSTANTE_PICNAME,         $db->quote($volo['picname'],         'text'), $sql);
+	$sql=str_replace(COSTANTE_TODAY,           $db->quote($volo['today'],           'integer'), $sql);
+	$sql=str_replace(COSTANTE_TONIGHT,         $db->quote($volo['tonight'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_LDGDAY,          $db->quote($volo['ldgday'],          'integer'), $sql);
+	$sql=str_replace(COSTANTE_LDGNIGHT,        $db->quote($volo['ldgnight'],        'integer'), $sql);
+	$sql=str_replace(COSTANTE_NIGHTTIME,       $db->quote($volo['nighttime'] ,      'integer'), $sql);
+	$sql=str_replace(COSTANTE_IFRTIME,         $db->quote($volo['ifrtime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_PICTIME,         $db->quote($volo['pictime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_COPTIME,         $db->quote($volo['coptime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_DUALTIME,        $db->quote($volo['dualtime'],        'integer'), $sql);
+	$sql=str_replace(COSTANTE_INSTRTIME,       $db->quote($volo['instrtime'],       'integer'), $sql);
+	$sql=str_replace(COSTANTE_RMKS,            $db->quote($volo['rmks'] ,           'text'), $sql);
+	$sql=str_replace(COSTANTE_USER,            $db->quote($_SESSION['username'],    'text'), $sql);	
+//	print $sql;
+//	echo'	</pre>';
 
 	$res=$db->query($sql);
 
 	if (PEAR::isError($res)) {
 		//var_dump($res);
 		errore("insertVolo - ".$res->getUserInfo());
-		$volo['messaggio']="Inserimento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
+		$volo['messaggio']="Inserimento NON effettuato - contatta gli amministratori";
 	}else{
 		$volo['messaggio']="Inserimento effettuato";
-		$volo['pk'] = $db->lastInsertID();
 	}
-	
 	return $volo;
+
 }
 
 function updateVolo($volo){
@@ -267,7 +282,7 @@ function updateVolo($volo){
 	if (PEAR::isError($res)) {
 		//var_dump($res);
 		errore("insertVolo - ".$res->getUserInfo());
-		$volo['messaggio']="Aggiornamento NON effettuato - contatta gli amministratori (ced@confartigianato.bs.it)";
+		$volo['messaggio']="Aggiornamento NON effettuato - contatta gli amministratori";
 	}else{
 		$volo['messaggio']="Aggiornamento effettuato";
 	}

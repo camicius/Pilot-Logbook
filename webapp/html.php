@@ -132,22 +132,25 @@ function html_volo($tabella=Array(), $oldies){
 	$tabella['nuovo'] ='N';
 	if(!isset($tabella['data'])){
 		$tabella = Array(
-			'mandamento'        => $_SESSION['mandamento'],
-			'data'              => date("d/m/Y"),
-			'au'                => '',
-			'ragsoc'            => '',
-			'rea'               => '',
-			'indirizzo'         => '',
-			'protocollo'        => '',
-			'pec_attiva'        => booleanToDB(false),
-			'cns_richiesta'     => booleanToDB(false),
-			'cns_attiva'        => booleanToDB(false),
-			'comunica_incarico' => booleanToDB(false),
-			'comunica_invia'    => booleanToDB(false),
-			'comunica_evasa'    => booleanToDB(false),
-			'note'              => '',
-			'chiusura'          => booleanToDB(false),
-			'nuovo'             => booleanToDB(true),
+			'nuovo'            => 'S',
+			'data'             => '',
+			'depplace'         => '',
+			'deptime'          => '',
+			'arrplace'         => '',
+			'arrtime'          => '',
+			'acftmodel'        => '',
+			'acftreg'          => '',
+			'spt'              => '',
+			'multipilotbool'   => booleanToDB(false),
+			'picname'          => '',
+			'today'            => 1,
+			'tonight'          => 0,
+			'ldgday'           => 1,
+			'ldgnight'         => 0,
+			'nighttime'        => '',
+			'ifrtime'          => '',
+			'function'         => '',
+			'rmks'             => ''
 		);	
 	}
 	//echo "<pre>";

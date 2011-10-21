@@ -43,8 +43,8 @@ define ('COSTANTE_COPTIME',         '%%COPTIME%%');
 define ('COSTANTE_DUALTIME',        '%%DUALTIME%%');
 define ('COSTANTE_INSTRTIME',       '%%INSTRTIME%%');
 define ('COSTANTE_RMKS',            '%%RMKS%%');
-$sqlInsertVolo='INSERT INTO dat.logbook(data, "depPlace", "arrPlace", "depTime", "arrTime", "acftModel", "acftReg", spt, "multiPilot", "totalFlightTime", "picName", "toDay", "toNight", "ldgDay", "ldgNight", "nightTime", "ifrTime", "picTime", "copTime", "dualTime", "instrTime", rmks, "user")
-    VALUES (%%DATA%%, %%DEPPLACE%%,  %%ARRPLACE%%, %%DEPTIME%%, %%ARRTIME%%, %%ACFTMODEL%%, %%ACFTREG%%, %%SPT%%,%%MULTIPILOT%%, %%TOTALFLIGHTTIME%%, %%PICNAME%%, %%TODAY%%, %%TONIGHT%%, %%LDGDAY%%, %%LDGNIGHT%%, %%NIGHTTIME%%, %%IFRTIME%%, %%PICTIME%%, %%COPTIME%%, %%DUALTIME%%, %%INSTRTIME%%, %%RMKS%%)';
+$sqlInsertVolo='INSERT INTO dat.logbook(data, depplace, arrplace, deptime, arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, username)
+    VALUES (%%DATA%%, %%DEPPLACE%%,  %%ARRPLACE%%, %%DEPTIME%%, %%ARRTIME%%, %%ACFTMODEL%%, %%ACFTREG%%, %%SPT%%,%%MULTIPILOT%%, %%TOTALFLIGHTTIME%%, %%PICNAME%%, %%TODAY%%, %%TONIGHT%%, %%LDGDAY%%, %%LDGNIGHT%%, %%NIGHTTIME%%, %%IFRTIME%%, %%PICTIME%%, %%COPTIME%%, %%DUALTIME%%, %%INSTRTIME%%, %%RMKS%%, %%USER%%)';
 
 
 
