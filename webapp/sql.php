@@ -8,7 +8,9 @@ if(!isset ($config)){ exit(127);}
 define ('COSTANTE_USER', '%%USER%%');
 $sqlVoli='SELECT pk, data, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%%  ';
 
-
+$sqlTotali="select sum (ldgday)+sum (ldgnight), sum(totalflighttime), sum(pictime), sum(coptime), sum(dualtime), sum(instrtime)
+from dat.logbook
+where username='occhi' and data < current_date -integer '30'";
 
 $sqlOldPlaces = 'select distinct arrplace  from dat.logbook WHERE username=%%USER%%  union distinct  select distinct depplace from dat.logbook WHERE username=%%USER%% ';
 $sqlOldModel  = 'select distinct acftmodel from dat.logbook WHERE username=%%USER%%  ';
