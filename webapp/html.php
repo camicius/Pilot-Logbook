@@ -86,18 +86,24 @@ function html_headerRow(){
 }
 
 
-function html_voli($tabella){
+function html_voli($tabella, $limiti){
+
 
 	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> -  <a href="index.php?logout">Logout</a> </h3>';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
+		echo '<h2>Informazioni utili </h2>';
+		echo 'Negli ultimi 30 giorni hai volato per ' . $limiti['tempo'] . ' minuti<br />' ;
+		echo 'Negli ultimi 90 giorni hai effettuato ' . $limiti['to'] . ' decolli e ' . $limiti['ldg'] . ' atterraggi<br />' ;
+		echo '<h2>Dettaglio dei voli </h2>';
 		echo '<table border="1"> ';
 		html_headerRow();
 		$countRow=0;	
 		foreach ($tabella as $riga)	{
 			if(++$countRow== 15) html_headerRow();
 			echo '<tr>';
-			echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
+			if($riga['pk']!='')echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
+			else echo '<td>Totali</td>';
 			echo '<td>' . $riga['data']  . '</td>';
 			echo '<td>' . $riga['depplace'] . '</td>';
 			echo '<td>' . $riga['deptime'] . '</td>';
@@ -120,7 +126,8 @@ function html_voli($tabella){
 			echo '<td>' . $riga['dualtime'] . '</td>';
 			echo '<td>' . $riga['instrtime'] . '</td>';
 			echo '<td>' . $riga['rmks'] . '</td>';
-			echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
+			if($riga['pk']!='')echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
+			else echo '<td>Totali</td>';
 			echo '</tr>';
 		}
 		echo '</table> ';

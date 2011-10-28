@@ -39,21 +39,60 @@ function pagina(){
 		//$oldies=getOldies();
 		$volo=insertVolo($_POST);
 		$tabella=getVoli();
-		html_voli($tabella);
+		$limiti=getLimiti();
+		html_voli($tabella, $limiti);
 	
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo il volo vecchio e lo modifico	
 		$volo=updateVolo($_POST);
 		$tabella=getVoli();
-		html_voli($tabella);
+		$limiti=getLimiti();
+		html_voli($tabella, $limiti);
 	}else{ 														#mostro l'elenco dei voli
 		$tabella=getVoli();
-		html_voli($tabella);
+		$limiti=getLimiti();
+		html_voli($tabella, $limiti);
 	}
 	
 }
 
+function getLimiti(){
+	global $sqlLimiteTempo, $sqlLimiteAtterraggi, $db;
+	$sql=$sqlLimiteTempo;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
+
+	$res=$db->query($sql);
+
+	if (PEAR::isError($res)) {
+		var_dump ($sql);
+		//var_dump($res);
+		
+		errore("getLimiti - ".$res->getUserInfo());
+	}
+	$tempo=$res->fetchOne();
+	if (is_null($tempo)) $tempo=0;
+
+	$sql=$sqlLimiteAtterraggi; 	
+	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
+
+	$res=$db->query($sql);
+
+	if (PEAR::isError($res)) {
+		var_dump ($sql);
+		//var_dump($res);
+		
+		errore("getLimiti - ".$res->getUserInfo());
+	}
+	$ldgRow=$res->fetchRow();
+	if (is_null($ldgRow['ldg'])) $ldgRow['ldg']=0;
+	if (is_null($ldgRow['to'])) $ldgRow['to']=0;
+	return Array( 'tempo' => $tempo, 'ldg'=>$ldgRow['ldg'], 'to'=>$ldgRow['to']);
+}
+
+
+
+
 function getVoli(){
-	global $sqlVoli, $db;
+	global $sqlVoli, $sqlTotali, $db;
 	$sql=$sqlVoli;
  	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
 
@@ -70,6 +109,42 @@ function getVoli(){
     	$voli[]=$row;
 	}
 	
+	$sql=$sqlTotali;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
+
+	$res=$db->query($sql);
+
+	if (PEAR::isError($res)) {
+		var_dump ($sql);
+		//var_dump($res);
+		
+		errore("getVoli - ".$res->getUserInfo());
+	}
+	$row = $res->fetchRow();
+	$volo['pk']             = '';
+	$volo['data']           = '';
+	$volo['depplace']       = '';
+	$volo['arrplace']       = '';
+	$volo['deptime']        = '';
+	$volo['arrtime']        = '';
+	$volo['acftmodel']      = '';
+	$volo['acftreg']        = '';
+	$volo['spt']            = '';
+	$volo['multipilot']     = '';
+	$volo['totalflighttime']= $row['totalflighttime'] ;
+	$volo['picname']        = '';
+	$volo['today']          = '';
+	$volo['tonight']        = '';
+	$volo['ldgday']         = '';
+	$volo['ldgnight']       = '';
+	$volo['nighttime']      = $row['nighttime'] ;
+	$volo['ifrtime']        = $row['ifrtime'];
+	$volo['pictime']        = $row['pictime'];
+	$volo['coptime']        = $row['coptime'];
+	$volo['dualtime']       = $row['dualtime'];
+	$volo['instrtime']      = $row['instrtime'];
+	$volo['rmks']           = '';
+	$voli[]=$volo;
 	return $voli;
 
 
