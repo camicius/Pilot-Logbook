@@ -37,6 +37,8 @@ define('FALSE',     'N');
 require_once 'sql.php';
 require_once 'html.php';
 require_once 'funzioni.php';
+require_once 'Validate.php';
+require_once 'Formvalidator.php';
 /*
 	connessione al db
 */

@@ -160,15 +160,13 @@ function html_volo($tabella=Array(), $oldies){
 			'rmks'             => ''
 		);	
 	}
-	//echo "<pre>";
-	//var_dump($tabella);
-	//echo "</pre>";
+
 	echo '<table border=1> ';
 	echo '<form action="index.php" method="post" name="volo" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="nuovo" value="' . $tabella['nuovo'] . '" />';
 	if (isset($tabella['pk'])) echo '<input type="hidden" name="pk" value="' . $tabella['pk'] . '" />';
 
-	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: #00ff00;" colspan="2">' . $tabella['messaggio'] . '</th></tr>';
+	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: red;" colspan="2">' . $tabella['messaggio'] . '</th></tr>';
 
 
 	echo '<tr><th colspan="2">Data</th><td>'                                        . html_data              ('data',                            $tabella['data'])          . '</td></tr>';

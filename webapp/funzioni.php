@@ -36,14 +36,21 @@ function pagina(){
 		$oldies=getOldies();
 		html_volo(null, $oldies);
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(true)){	#ricevo il volo nuovo e lo inserisco
-		//$oldies=getOldies();
 		$volo=insertVolo($_POST);
+		if(isset($volo['messaggio'])){
+			$oldies=getOldies();
+			html_volo($volo, $oldies);
+		}
 		$tabella=getVoli();
 		$limiti=getLimiti();
 		html_voli($tabella, $limiti);
 	
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo il volo vecchio e lo modifico	
 		$volo=updateVolo($_POST);
+		if(isset($volo['messaggio'])){
+			$oldies=getOldies();
+			html_volo($volo, $oldies);
+		}
 		$tabella=getVoli();
 		$limiti=getLimiti();
 		html_voli($tabella, $limiti);
@@ -54,6 +61,30 @@ function pagina(){
 	}
 	
 }
+
+function validate($volo){
+	$volo['acftreg']  =trim($volo['acftreg']);
+	$volo['picname']  =trim($volo['picname']);
+	$volo['acftreg']  =trim($volo['acftreg']);
+	$volo['acftmodel']=trim($volo['acftmodel']);
+	$errore="";
+	if(Validate::date  ($volo['data'],     array('format' => '%Y-%m-%d')))                                          $errore.="Data volo non valida - ";
+	if(Validate::string($volo['depplace'], array('format' => VALIDATE_ALPHA, 'max_length'=> 4, 'min_length'=> 4 ))) $errore.="Aeroporto di partenza non valido - ";
+	if(Validate::string($volo['arrplace'], array('format' => VALIDATE_ALPHA, 'max_length'=> 4, 'min_length'=> 4 ))) $errore.="Aeroporto di arrivo non valido - ";
+	if(ereg('([01][0-9][0-6][0-9])|([2][0-4][0-6][0-9])', $volo['deptime'])==0)                                     $errore.="Orario di partenza non valido - ";
+	if(ereg('([01][0-9][0-6][0-9])|([2][0-4][0-6][0-9])', $volo['arrtime'])==0)                                     $errore.="Orario di partenza non valido - ";
+
+	if(Validate::number($volo['today'],    array('decimal' => '.', 'dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
+	if(Validate::number($volo['tonight'],  array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
+	if(Validate::number($volo['ldgday'],   array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
+	if(Validate::number($volo['ldgnight'], array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
+
+	return $errore;
+
+}
+
+
+
 
 function getLimiti(){
 	global $sqlLimiteTempo, $sqlLimiteAtterraggi, $db;
@@ -238,6 +269,11 @@ function getVolo($pk){
 }
 
 function insertVolo($volo){
+	$errorevalidazione=validate($volo);
+	if($errorevalidazione!=''){
+		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
+		return $volo;
+	}
 	//print_r($volo);
 	global $sqlInsertVolo, $db;
 	$sql=$sqlInsertVolo;
@@ -301,6 +337,11 @@ function insertVolo($volo){
 }
 
 function updateVolo($volo){
+	$errorevalidazione=validate($volo);
+	if($errorevalidazione!=''){
+		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
+		return $volo;
+	}
 	global $sqlUpdateVolo, $db;
 	$sql=$sqlUpdateVolo;
 	
