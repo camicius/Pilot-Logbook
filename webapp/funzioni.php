@@ -131,7 +131,10 @@ function validate($volo){
 
 }
 
-
+function loginFunction($username = null, $status = null, &$auth = null)
+{
+	html_login();
+}
 
 
 function getLimiti(){

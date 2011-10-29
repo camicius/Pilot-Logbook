@@ -39,6 +39,7 @@ require_once 'sql.php';
 require_once 'html.php';
 require_once 'funzioni.php';
 require_once 'Formvalidator.php';
+require_once "Auth.php";
 /*
 	connessione al db
 */

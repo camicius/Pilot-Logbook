@@ -4,7 +4,42 @@ require_once('config.php');
 
 html_header();
 
+$options = array(
+ // 'file' => "passwordfile.csv",
+	'dsn' => $dsn,
+	'table' => 'dat.auth'
+  );
+$a = new Auth("MDB2", $options, "loginFunction");
+$a->start();
+if ( isset($_GET['logout']) && $a->checkAuth()) {
+	unset($_SESSION['username']);
+    $a->logout();
+    $a->start();
+}
+if ($a->checkAuth()){
+	$_SESSION['username']=$a->getUsername();
+	pagina();
+}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 if (isset($_GET['logout'])){
 	unset($_SESSION['username']);
 	html_login();
@@ -34,7 +69,7 @@ else if(isset($_SESSION['username'])){
 
 }else{
 	html_login();
-}
+}*/
 
 html_footer();
 

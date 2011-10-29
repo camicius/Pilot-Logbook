@@ -3,8 +3,8 @@ TODO
 
 == AUTENTICAZIONE ==
 
-Registrazione con invio password a indirizzo mail
 Autenticazione:  definire tabella e informazioni utenti
+Registrazione con invio password a indirizzo mail
 Autenticazione solo via facebook, o meglio oauth2, openid o che ne so!
 Cambia password: recuperare da upacontratti?
 recupero password: mail con link per il reset + mail con la password nuova da cambiare
