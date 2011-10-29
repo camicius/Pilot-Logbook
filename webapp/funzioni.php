@@ -28,7 +28,13 @@ function verificaPassword($username, $password){
 
 function pagina(){
 	// Costruzione della pagina
-	if(isset($_GET['pk'])){										#richiamo la pagina del volo per la modifica
+	if(isset($_GET['tempozero'])){										#richiamo la pagina del tempo zero per la modifica
+		$tempozero=getTempoZero($_SESSION['username']);
+		html_tempozero($tempozero);
+	}else if(isset($_POST['tempozerosave'])){ 								#richiamo la pagina del volo per il salvataggio
+		$tempozero=saveTempoZero($_POST);
+		html_tempozero($tempozero);
+	}else if(isset($_GET['pk'])){										#richiamo la pagina del volo per la modifica
 		$oldies=getOldies();
 		$volo=getVolo($_GET['pk']);
 		html_volo($volo, $oldies);
@@ -44,7 +50,6 @@ function pagina(){
 		$tabella=getVoli();
 		$limiti=getLimiti();
 		html_voli($tabella, $limiti);
-	
 	}else if(isset($_POST['nuovo']) && $_POST['nuovo']==booleanToDB(false)){ 	#ricevo il volo vecchio e lo modifico	
 		$volo=updateVolo($_POST);
 		if(isset($volo['messaggio'])){
@@ -62,7 +67,34 @@ function pagina(){
 	}
 	
 }
+// multipilot, totalflighttime, nighttime, ifrtime, pictime, coptime, dualtime, instrtime
+function validateTempoZero($tempoZero){
+	$errore="";
+	$validations = array(
+	    'multipilot'      => 'number',
+	    'totalflighttime' => 'number',
+	    'nighttime'       => 'number',
+	    'ifrtime'         => 'number',
+	    'pictime'         => 'number',
+	    'dualtime'        => 'number',
+	    'instrtime'       => 'number');
+	$required = array();
+	$sanatize = array();
 
+	$validator = new FormValidator($validations, $required, $sanatize);
+	
+	if($validator->validate($tempoZero))	{
+	    $tempoZero = $validator->sanatize($tempoZero);
+	}else{
+		$errore = "Ci sono campi non validi";
+		foreach ($validator->getErrors() as $campo=>$validation){
+			$errore .= " <br />" . campo2error($campo, $tempoZero[$campo]);
+		}
+	}
+
+	return $errore;
+
+}
 function validate($volo){
 	$volo['acftreg']  =trim($volo['acftreg']);
 	$volo['picname']  =trim($volo['picname']);
@@ -283,6 +315,38 @@ function getVolo($pk){
 
 	return $voli[0];
 }
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+
+function getTempoZero($username){
+	global $sqlGetTempoZero, $db;
+
+
+	$sql=$sqlGetTempoZero;
+ 	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
+	
+
+	$res=$db->query($sql);
+
+	if (PEAR::isError($res)) {
+	//	var_dump($res);
+		errore("getVolo - ".$res->getUserInfo());
+	}
+	
+	return $res->fetchRow();
+}
+
+
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
 
 function insertVolo($volo){
 	$errorevalidazione=validate($volo);
@@ -430,28 +494,75 @@ function updateVolo($volo){
 
 
 }
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+function saveTempozero($tempozero){
+	global $sqlUpdateTempoZero, $db;
+	$tempozero['totalflighttime']=$tempozero['pictime']+$tempozero['coptime']+$tempozero['dualtime']+$tempozero['instrtime'];
+	$sql=$sqlUpdateTempoZero;
+	$errorevalidazione=validateTempoZero($tempozero);
+	$sql=str_replace(COSTANTE_PK,              $db->quote($tempozero['pk'],              'text'), $sql);
+	$sql=str_replace(COSTANTE_MULTIPILOT,      $db->quote($tempozero['multipilot'],      'integer' ), $sql);
+	$sql=str_replace(COSTANTE_TOTALFLIGHTTIME, $db->quote($tempozero['totalflighttime'], 'integer' ), $sql);
+	$sql=str_replace(COSTANTE_NIGHTTIME,       $db->quote($tempozero['nighttime'] ,      'integer'), $sql);
+	$sql=str_replace(COSTANTE_IFRTIME,         $db->quote($tempozero['ifrtime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_PICTIME,         $db->quote($tempozero['pictime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_COPTIME,         $db->quote($tempozero['coptime'],         'integer'), $sql);
+	$sql=str_replace(COSTANTE_DUALTIME,        $db->quote($tempozero['dualtime'],        'integer'), $sql);
+	$sql=str_replace(COSTANTE_INSTRTIME,       $db->quote($tempozero['instrtime'],       'integer'), $sql);
+	$sql=str_replace(COSTANTE_USER,            $db->quote($_SESSION['username'],         'text'), $sql);		
+	if($errorevalidazione!=''){
+		$tempozero['messaggioko']="Aggiornamento NON effettuato - $errorevalidazione";
+		return $tempozero;
+	}else{
+		$tempozero['messaggiook']="Aggiornamento effettuato";
+	}
+	$res=$db->query($sql);
+
+	if (PEAR::isError($res)) {
+		//var_dump($res);
+		errore("insertVolo - ".$res->getUserInfo());
+		$tempozero['messaggioko']="Aggiornamento NON effettuato - contatta gli amministratori";
+	}
+	return $tempozero;
 
 
-
+}
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
 function campo2error($campo, $valore){
 	switch ($campo){
 		case 'depplace': 
 			return "L'aeroporto di partenza non &egrave valido ($valore)";
 	    case 'data':    
-			return "La data non &egrave valida ($valore)";
+			return "La data non &egrave; valida ($valore)";
 	    case 'depplace':
-			return "L'aeroporto di partenza non &egrave valido ($valore)";
+			return "L'aeroporto di partenza non &egrave; valido ($valore)";
 	    case 'arrplace':
-			return "L'aeroporto di arrivo non &egrave valido ($valore)";
+			return "L'aeroporto di arrivo non &egrave; valido ($valore)";
 	    case 'deptime': 
-			return "L'ora di partenza non &egrave valida (formato hhmm in orario zulu)";
+			return "L'ora di partenza non &egrave; valida (formato hhmm in orario zulu)";
 	    case 'arrtime': 
-			return "L'ora di arrivo non &egrave valida (formato hhmm in orario zulu)";
+			return "L'ora di arrivo non &egrave; valida (formato hhmm in orario zulu)";
 	    case 'today':
 	    case 'tonight': 
 	    case 'ldgday':  
 	    case 'ldgnight':
-			return "$valore non è un numero";
+	    case 'multipilot':
+	    case 'nighttime':
+	    case 'ifrtime':
+	    case 'pictime':
+	    case 'dualtime':
+	    case 'instrtime':
+			return "$valore non &egrave; un numero";
 		default:
 			return "$campo ha un valore non valido ($valore)";
 	}

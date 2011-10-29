@@ -5,17 +5,22 @@ TODO
 
 Registrazione con invio password a indirizzo mail
 Autenticazione:  definire tabella e informazioni utenti
-Autenticazione solo via facebook, o meglio oauth2?
+Autenticazione solo via facebook, o meglio oauth2, openid o che ne so!
 Cambia password: recuperare da upacontratti?
 recupero password: mail con link per il reset + mail con la password nuova da cambiare
 
 == APPLICAZIONE ==
 Definizione tabella dati. Logbook da norme ICAO? FATTO
-Paginazione dei voli.
 Pagina statistiche. FATTO in testata
-Stampa del pdf del logbook da norme ICAO
 inserimento e modifica voli FATTO
 validazione dati (orari, date e tempi lato server) FATTO
+Impostazione tempi di partenza (volo zero) FATTO
+
+
+
+import/export dei voli (formato csv)
+Paginazione dei voli.
+Stampa del pdf del logbook da norme ICAO
 validazione dati (orari, date e tempi lato client- jQuery o simili?) 
 
 

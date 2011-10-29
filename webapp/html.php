@@ -89,7 +89,7 @@ function html_headerRow(){
 function html_voli($tabella, $limiti){
 
 
-	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?logout">Logout</a> </h3>';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
 		echo '<h2>Informazioni utili </h2>';
@@ -197,8 +197,41 @@ function html_volo($tabella=Array(), $oldies){
 	echo '</form>';
 	echo '</table> ';
 	echo '<a href="index.php">Torna all\'elenco voli</a><br />';
-	echo '<a href="index.php?new">Inserisci una nuova volo</a><br />';
+	echo '<a href="index.php?new">Inserisci un nuovo volo</a><br />';
 }
+
+
+
+function html_tempozero($tempoZero){
+
+	echo '<table border=1> ';
+	echo '<form action="index.php" method="post" name="volo" enctype="multipart/form-data">';
+    echo '<input type="hidden" name="pk" value="' . $tempoZero['pk'] . '" />';
+    echo '<input type="hidden" name="tempozerosave" value="tempozerosave" />';
+	if( isset($tempoZero['messaggiook'])) echo '<tr><th style="background-color: green;" colspan="2">' . $tempoZero['messaggiook'] . '</th></tr>';
+	if( isset($tempoZero['messaggioko'])) echo '<tr><th style="background-color: red;"   colspan="2">' . $tempoZero['messaggioko'] . '</th></tr>';
+	echo '<tr><th>Total Flight Time </th><td>' . $tempoZero['totalflighttime']                                  . '</td></tr>';
+	echo '<tr><th>Multi Pilot Time </th><td>'  . html_number ('multipilot',      $tempoZero['multipilot'])      . '</td></tr>';
+	echo '<tr><th>Night Time </th><td>'        . html_number ('nighttime',       $tempoZero['nighttime'])       . '</td></tr>';
+	echo '<tr><th>IFR Time </th><td>'          . html_number ('ifrtime',         $tempoZero['ifrtime'])         . '</td></tr>';
+	echo '<tr><th>PIC Time </th><td>'          . html_number ('pictime',         $tempoZero['pictime'])         . '</td></tr>';
+	echo '<tr><th>Copilot Time </th><td>'      . html_number ('coptime',         $tempoZero['coptime'])         . '</td></tr>';
+	echo '<tr><th>Dual Time </th><td>'         . html_number ('dualtime',        $tempoZero['dualtime'])        . '</td></tr>';
+	echo '<tr><th>Instructor Time </th><td>'   . html_number ('instrtime',       $tempoZero['instrtime'])       . '</td></tr>';
+	echo '<tr><th colspan="2"><input type="submit" value="Aggiorna!" /></th></tr>';
+	echo '</form>';
+	echo '</table> ';
+	echo '<a href="index.php">Torna all\'elenco voli</a><br />';
+	echo '<a href="index.php?new">Inserisci un nuovo volo</a><br />';
+
+
+}
+
+
+
+
+
+
 function html_combobox($name, $options, $selezionato=""){
 	$string="";
 	$string.= '<select name="'.$name.'"> ';
