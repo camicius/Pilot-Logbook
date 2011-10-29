@@ -1,9 +1,10 @@
 <?
+session_start();
 require_once('config.php');
 
 html_header();
 
-session_start();
+
 if (isset($_GET['logout'])){
 	unset($_SESSION['username']);
 	html_login();
@@ -24,7 +25,6 @@ else if(isset($_SESSION['username'])){
 	//echo "password ok! <BR> <BR>";
 	if($ok){
 		$_SESSION['username']   = $username;
-
 		pagina();	
 
 		

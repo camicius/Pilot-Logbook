@@ -1,14 +1,15 @@
 <?
-
+error_reporting(E_ALL & ~E_DEPRECATED);
 $config="ok";
 /*
 	Dati di connessione al db e a ldap
 */
 define('DB_HOST',   'localhost');
-define('DB_PORT',   '6543');
-define('DB_USER',   'prjadmin');
-define('DB_PSW',    '');
-define('DB_SCHEMA', 'metopack');
+define('DB_PORT',   '5432');
+define('DB_USER',   'postgres');
+define('DB_PSW',    'passw0rd');
+define('DB_SCHEMA', 'postgres');
+
 
 /*
 	importazione librerie di accesso al db
@@ -37,7 +38,6 @@ define('FALSE',     'N');
 require_once 'sql.php';
 require_once 'html.php';
 require_once 'funzioni.php';
-require_once 'Validate.php';
 require_once 'Formvalidator.php';
 /*
 	connessione al db

@@ -1,12 +1,12 @@
- <?
+<?
 if(!isset ($config)){ exit(127);}
 
 function errore($testo){
 	//html_errore($testo);
 	echo $testo;
 	echo '<br /><br /><br />';
-	echo '<br /><br />Copia il testo qui sopra e mandalo a ced@confartigianato.bs.it <br /><br /><br />';
-	echo '<a onClic="index.php">Ritorna alla pagina principale</a>';
+	echo '<br /><br />Errore. Contatta gli amministratori, copiando il testo qui sopra <br /><br /><br />';
+	echo '<a href="index.php">Ritorna alla pagina principale</a>';
 	die();
 
 }
@@ -50,10 +50,11 @@ function pagina(){
 		if(isset($volo['messaggio'])){
 			$oldies=getOldies();
 			html_volo($volo, $oldies);
+		}else{
+			$tabella=getVoli();
+			$limiti=getLimiti();
+			html_voli($tabella, $limiti);
 		}
-		$tabella=getVoli();
-		$limiti=getLimiti();
-		html_voli($tabella, $limiti);
 	}else{ 														#mostro l'elenco dei voli
 		$tabella=getVoli();
 		$limiti=getLimiti();
@@ -68,16 +69,31 @@ function validate($volo){
 	$volo['acftreg']  =trim($volo['acftreg']);
 	$volo['acftmodel']=trim($volo['acftmodel']);
 	$errore="";
-	if(Validate::date  ($volo['data'],     array('format' => '%Y-%m-%d')))                                          $errore.="Data volo non valida - ";
-	if(Validate::string($volo['depplace'], array('format' => VALIDATE_ALPHA, 'max_length'=> 4, 'min_length'=> 4 ))) $errore.="Aeroporto di partenza non valido - ";
-	if(Validate::string($volo['arrplace'], array('format' => VALIDATE_ALPHA, 'max_length'=> 4, 'min_length'=> 4 ))) $errore.="Aeroporto di arrivo non valido - ";
-	if(ereg('([01][0-9][0-6][0-9])|([2][0-4][0-6][0-9])', $volo['deptime'])==0)                                     $errore.="Orario di partenza non valido - ";
-	if(ereg('([01][0-9][0-6][0-9])|([2][0-4][0-6][0-9])', $volo['arrtime'])==0)                                     $errore.="Orario di partenza non valido - ";
 
-	if(Validate::number($volo['today'],    array('decimal' => '.', 'dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
-	if(Validate::number($volo['tonight'],  array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
-	if(Validate::number($volo['ldgday'],   array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
-	if(Validate::number($volo['ldgnight'], array('dec_prec' => 0, 'min'=>0 )))                                      $errore.="Numero decolli giorno non valido - ";
+
+	$validations = array(
+	    'data'     => 'date',
+	    'depplace' => 'icaoAirport',
+	    'arrplace' => 'icaoAirport',
+	    'deptime'  => 'hour4digit',
+	    'arrtime'  => 'hour4digit',
+	    'today'    => 'number',
+	    'tonight'  => 'number',
+	    'ldgday'   => 'number',
+	    'ldgnight' => 'number');
+	$required = array('data', 'deptime', 'arrtime');
+	$sanatize = array();
+
+	$validator = new FormValidator($validations, $required, $sanatize);
+	
+	if($validator->validate($volo))	{
+	    $volo = $validator->sanatize($volo);
+	}else{
+		$errore = "Ci sono campi non validi";
+		foreach ($validator->getErrors() as $campo=>$validation){
+			$errore .= " <br />" . campo2error($campo, $volo[$campo]);
+		}
+	}
 
 	return $errore;
 
@@ -270,10 +286,7 @@ function getVolo($pk){
 
 function insertVolo($volo){
 	$errorevalidazione=validate($volo);
-	if($errorevalidazione!=''){
-		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
-		return $volo;
-	}
+
 	//print_r($volo);
 	global $sqlInsertVolo, $db;
 	$sql=$sqlInsertVolo;
@@ -288,10 +301,16 @@ function insertVolo($volo){
 	$volo['totalflighttime']=$arrHour*60+$arrMin-($depHour*60+$depMin);
 
 
-	$volo['deptime']= $volo['data'] . " " . substr($volo['deptime'], 0, 2) . ":" . substr($volo['deptime'], 2, 2);
-	$volo['arrtime']= $volo['data'] . " " . substr($volo['arrtime'], 0, 2) . ":" . substr($volo['arrtime'], 2, 2);
-	if($volo['multipilot']= formToDB($volo,'multipilot')==booleanToDB(true))$volo['multipilot']= $volo['totalflighttime']; else $volo['multipilot']  = 0;;
-
+	$volo['deptimedb']= $volo['data'] . " " . substr($volo['deptime'], 0, 2) . ":" . substr($volo['deptime'], 2, 2);
+	$volo['arrtimedb']= $volo['data'] . " " . substr($volo['arrtime'], 0, 2) . ":" . substr($volo['arrtime'], 2, 2);
+	if(formToDB($volo,'multipilot')==booleanToDB(true)){
+		$volo['multipilot']= $volo['totalflighttime'];
+		$volo['multipilotbool']= booleanToDB(true);
+	}
+	else {
+		$volo['multipilot']  = 0;
+		$volo['multipilotbool']= booleanToDB(false);
+	}
 	if($volo['function']==PIC)  $volo['pictime']=  $volo['totalflighttime']; else $volo['pictime']  =0;
 	if($volo['function']==COP)  $volo['coptime']=  $volo['totalflighttime']; else $volo['coptime']  =0;	
 	if($volo['function']==DUAL) $volo['dualtime']= $volo['totalflighttime']; else $volo['dualtime'] =0;
@@ -300,8 +319,8 @@ function insertVolo($volo){
 	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'date'), $sql);
 	$sql=str_replace(COSTANTE_DEPPLACE,        $db->quote($volo['depplace'],        'text'), $sql);
 	$sql=str_replace(COSTANTE_ARRPLACE,        $db->quote($volo['arrplace'],        'text'), $sql);
-	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptime'],         'timestamp'), $sql);
-	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtime'],         'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptimedb'],       'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtimedb'],       'timestamp'), $sql);
 	$sql=str_replace(COSTANTE_ACFTMODEL,       $db->quote($volo['acftmodel'],       'text'), $sql);
 	$sql=str_replace(COSTANTE_ACFTREG,         $db->quote($volo['acftreg'],         'text'), $sql);
 	$sql=str_replace(COSTANTE_SPT,             $db->quote($volo['spt'],             'text'), $sql);
@@ -322,15 +341,16 @@ function insertVolo($volo){
 	$sql=str_replace(COSTANTE_USER,            $db->quote($_SESSION['username'],    'text'), $sql);	
 //	print $sql;
 //	echo'	</pre>';
-
+	if($errorevalidazione!=''){
+		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
+		return $volo;
+	}
 	$res=$db->query($sql);
 
 	if (PEAR::isError($res)) {
 		//var_dump($res);
 		errore("insertVolo - ".$res->getUserInfo());
 		$volo['messaggio']="Inserimento NON effettuato - contatta gli amministratori";
-	}else{
-		$volo['messaggio']="Inserimento effettuato";
 	}
 	return $volo;
 
@@ -338,10 +358,7 @@ function insertVolo($volo){
 
 function updateVolo($volo){
 	$errorevalidazione=validate($volo);
-	if($errorevalidazione!=''){
-		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
-		return $volo;
-	}
+	
 	global $sqlUpdateVolo, $db;
 	$sql=$sqlUpdateVolo;
 	
@@ -355,10 +372,16 @@ function updateVolo($volo){
 	$volo['totalflighttime']=$arrHour*60+$arrMin-($depHour*60+$depMin);
 
 
-	$volo['deptime']= $volo['data'] . " " . substr($volo['deptime'], 0, 2) . ":" . substr($volo['deptime'], 2, 2);
-	$volo['arrtime']= $volo['data'] . " " . substr($volo['arrtime'], 0, 2) . ":" . substr($volo['arrtime'], 2, 2);
-	if($volo['multipilot']= formToDB($volo,'multipilot')==booleanToDB(true))$volo['multipilot']= $volo['totalflighttime']; else $volo['multipilot']  = 0;;
-	
+	$volo['deptimedb']= $volo['data'] . " " . substr($volo['deptime'], 0, 2) . ":" . substr($volo['deptime'], 2, 2);
+	$volo['arrtimedb']= $volo['data'] . " " . substr($volo['arrtime'], 0, 2) . ":" . substr($volo['arrtime'], 2, 2);
+	if(formToDB($volo,'multipilot')==booleanToDB(true)){
+		$volo['multipilot']= $volo['totalflighttime'];
+		$volo['multipilotbool']= booleanToDB(true);
+	}
+	else {
+		$volo['multipilot']  = 0;
+		$volo['multipilotbool']= booleanToDB(false);
+	}
 
 
 	if($volo['function']==PIC)  $volo['pictime']=  $volo['totalflighttime']; else $volo['pictime']  =0;
@@ -370,8 +393,8 @@ function updateVolo($volo){
 	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'date'), $sql);
 	$sql=str_replace(COSTANTE_DEPPLACE,        $db->quote($volo['depplace'],        'text'), $sql);
 	$sql=str_replace(COSTANTE_ARRPLACE,        $db->quote($volo['arrplace'],        'text'), $sql);
-	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptime'],         'timestamp'), $sql);
-	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtime'],         'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_DEPTIME,         $db->quote($volo['deptimedb'],       'timestamp'), $sql);
+	$sql=str_replace(COSTANTE_ARRTIME,         $db->quote($volo['arrtimedb'],       'timestamp'), $sql);
 	$sql=str_replace(COSTANTE_ACFTMODEL,       $db->quote($volo['acftmodel'],       'text'), $sql);
 	$sql=str_replace(COSTANTE_ACFTREG,         $db->quote($volo['acftreg'],         'text'), $sql);
 	$sql=str_replace(COSTANTE_SPT,             $db->quote($volo['spt'],             'text'), $sql);
@@ -392,21 +415,47 @@ function updateVolo($volo){
 	$sql=str_replace(COSTANTE_USER,            $db->quote($_SESSION['username'],    'text'), $sql);	
 //	print $sql;
 //	echo'	</pre>';
-
+	if($errorevalidazione!=''){
+		$volo['messaggio']="Inserimento NON effettuato - $errorevalidazione";
+		return $volo;
+	}
 	$res=$db->query($sql);
 
 	if (PEAR::isError($res)) {
 		//var_dump($res);
 		errore("insertVolo - ".$res->getUserInfo());
 		$volo['messaggio']="Aggiornamento NON effettuato - contatta gli amministratori";
-	}else{
-		$volo['messaggio']="Aggiornamento effettuato";
 	}
 	return $volo;
 
 
 }
 
+
+
+function campo2error($campo, $valore){
+	switch ($campo){
+		case 'depplace': 
+			return "L'aeroporto di partenza non &egrave valido ($valore)";
+	    case 'data':    
+			return "La data non &egrave valida ($valore)";
+	    case 'depplace':
+			return "L'aeroporto di partenza non &egrave valido ($valore)";
+	    case 'arrplace':
+			return "L'aeroporto di arrivo non &egrave valido ($valore)";
+	    case 'deptime': 
+			return "L'ora di partenza non &egrave valida (formato hhmm in orario zulu)";
+	    case 'arrtime': 
+			return "L'ora di arrivo non &egrave valida (formato hhmm in orario zulu)";
+	    case 'today':
+	    case 'tonight': 
+	    case 'ldgday':  
+	    case 'ldgnight':
+			return "$valore non è un numero";
+		default:
+			return "$campo ha un valore non valido ($valore)";
+	}
+}
 function formToDB($volo,$campo){
 	if(isset($volo[$campo]) && $volo[$campo]=="on") return booleanToDB(true);
 	else if(isset($volo[$campo])) return $volo[$campo];

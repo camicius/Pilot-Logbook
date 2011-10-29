@@ -12,9 +12,10 @@ recupero password: mail con link per il reset + mail con la password nuova da ca
 == APPLICAZIONE ==
 Definizione tabella dati. Logbook da norme ICAO? FATTO
 Paginazione dei voli.
-Pagina statistiche. IN PARTE
+Pagina statistiche. FATTO in testata
 Stampa del pdf del logbook da norme ICAO
 inserimento e modifica voli FATTO
-validazione dati (orari, date e tempi lato server)
+validazione dati (orari, date e tempi lato server) FATTO
+validazione dati (orari, date e tempi lato client- jQuery o simili?) 
 
 

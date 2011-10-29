@@ -161,12 +161,13 @@ function html_volo($tabella=Array(), $oldies){
 		);	
 	}
 
+
 	echo '<table border=1> ';
 	echo '<form action="index.php" method="post" name="volo" enctype="multipart/form-data">';
 	echo '<input type="hidden" name="nuovo" value="' . $tabella['nuovo'] . '" />';
 	if (isset($tabella['pk'])) echo '<input type="hidden" name="pk" value="' . $tabella['pk'] . '" />';
 
-	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: red;" colspan="2">' . $tabella['messaggio'] . '</th></tr>';
+	if( isset($tabella['messaggio'])) echo '<tr><th style="background-color: red;" colspan="3">' . $tabella['messaggio'] . '</th></tr>';
 
 
 	echo '<tr><th colspan="2">Data</th><td>'                                        . html_data              ('data',                            $tabella['data'])          . '</td></tr>';
@@ -249,7 +250,7 @@ function html_number( $name, $value=''){
 }
 function html_text_and_old( $name, $oldValues, $value=''){
 	$string="";
-	$string .='<input name="' . $name . '" type="text" value="' . $value . ' "></input>';
+	$string .='<input name="' . $name . '" type="text" value="' . $value . '"></input>';
 	$string .='<select  name="' . $name . 'old" onchange="if(this.options[this.selectedIndex].value != \'NIL\') document.volo.' . $name . '.value=this.options[this.selectedIndex].value;">';
 	$string .= '  <option value="NIL" label="Recent Entries" selected="selected">Recent Entries</option>';
 	foreach ($oldValues as $old){

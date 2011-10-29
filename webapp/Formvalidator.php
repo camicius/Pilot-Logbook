@@ -30,7 +30,9 @@ class FormValidator
                 'price' => "^[0-9.,]*(([.,][-])|([.,][0-9]{2}))?\$",
                 '2digitopt' => "^\d+(\,\d{2})?\$",
                 '2digitforce' => "^\d+\,\d\d\$",
-                'anything' => "^[\d\D]{1,}\$"
+                'anything' => "^[\d\D]{1,}\$",
+				'icaoAirport' => "^[A-Za-z]{4}\$",
+				'hour4digit' => "^([01][0-9][0-6][0-9])|([2][0-4][0-6][0-9])\$",
     );
     private $validations, $sanatations, $mandatories, $errors, $corrects, $fields;
 
@@ -54,11 +56,13 @@ class FormValidator
         $havefailures = false;
         foreach($items as $key=>$val)
         {
-                if((strlen($val) == 0 || array_search($key, $this->validations) === false) && array_search($key, $this->mandatories) === false) 
+
+                if((strlen($val) == 0 || array_key_exists($key, $this->validations) === false) && array_key_exists($key, $this->mandatories) === false) 
                 {
                         $this->corrects[] = $key;
                         continue;
                 }
+				
                 $result = self::validateItem($val, $this->validations[$key]);
                 if($result === false) {
                         $havefailures = true;
@@ -68,6 +72,7 @@ class FormValidator
                 {
                         $this->corrects[] = $key;
                 }
+
         }
 
         return(!$havefailures);
@@ -78,6 +83,7 @@ class FormValidator
      *  Adds unvalidated class to thos elements that are not validated. Removes them from classes that are.
      */
     public function getScript() {
+		$output="";
         if(!empty($this->errors))
         {
                 $errors = array();
@@ -96,7 +102,14 @@ class FormValidator
         return($output);
     }
 
+    /**
+     *
+     *  Return the array with errors if validation already done.
+     */
+    public function getErrors() {
+		return $this->errors;
 
+	}
     /**
      *
      * Sanatizes an array of items according to the $this->sanatations
