@@ -14,7 +14,13 @@ function errore($testo){
 
 function pagina(){
 	// Costruzione della pagina
-	if(isset($_GET['tempozero'])){										#richiamo la pagina del tempo zero per la modifica
+	if(isset($_GET['backup'])){
+		ob_clean();
+		header("Content-Disposition: attachment; filename=\"backup.xls\"");
+		header("Content-Type: application/vnd.ms-excel");
+		$tabella=getVoli();
+		html_backup($tabella);
+	}else if(isset($_GET['tempozero'])){										#richiamo la pagina del tempo zero per la modifica
 		$tempozero=getTempoZero($_SESSION['username']);
 		html_tempozero($tempozero);
 	}else if(isset($_POST['tempozerosave'])){ 								#richiamo la pagina del volo per il salvataggio

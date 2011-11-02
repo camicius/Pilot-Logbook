@@ -85,11 +85,68 @@ function html_headerRow(){
 	
 }
 
+function html_backup($tabella){
+	echo '<table> ';
+	echo '<tr>';
+	echo '<td>data</td>';
+	echo '<td>depplace</td>';
+	echo '<td>deptime</td>';
+	echo '<td>arrplace</td>';
+	echo '<td>arrtime</td>';
+	echo '<td>acftmodel</td>';
+	echo '<td>acftreg</td>';
+	echo '<td>spt</td>';
+	echo '<td>multipilot</td>';
+	echo '<td>totalflighttime</td>';
+	echo '<td>picname</td>';
+	echo '<td>today</td>';
+	echo '<td>tonight</td>';
+	echo '<td>ldgday</td>';
+	echo '<td>ldgnight</td>';
+	echo '<td>nighttime</td>';
+	echo '<td>ifrtime</td>';
+	echo '<td>pictime</td>';
+	echo '<td>coptime</td>';
+	echo '<td>dualtime</td>';
+	echo '<td>instrtime</td>';
+	echo '<td>rmks</td>';
+	echo '</tr>';
+	foreach ($tabella as $riga)	{
+		if ($riga['depplace']=='')continue;
+		echo '<tr>';
+		echo '<td>' . $riga['data']  . '</td>';
+		echo '<td>' . $riga['depplace'] . '</td>';
+		echo '<td>' . $riga['deptime'] . '</td>';
+		echo '<td>' . $riga['arrplace'] . '</td>';
+		echo '<td>' . $riga['arrtime'] . '</td>';
+		echo '<td>' . $riga['acftmodel'] . '</td>';
+		echo '<td>' . $riga['acftreg'] . '</td>';
+		echo '<td>' . $riga['spt'] . '</td>';
+		echo '<td>' . $riga['multipilot'] . '</td>';
+		echo '<td>' . $riga['totalflighttime'] . '</td>';
+		echo '<td>' . $riga['picname'] . '</td>';
+		echo '<td>' . $riga['today'] . '</td>';
+		echo '<td>' . $riga['tonight'] . '</td>';
+		echo '<td>' . $riga['ldgday'] . '</td>';
+		echo '<td>' . $riga['ldgnight'] . '</td>';
+		echo '<td>' . $riga['nighttime'] . '</td>';
+		echo '<td>' . $riga['ifrtime'] . '</td>';
+		echo '<td>' . $riga['pictime'] . '</td>';
+		echo '<td>' . $riga['coptime'] . '</td>';
+		echo '<td>' . $riga['dualtime'] . '</td>';
+		echo '<td>' . $riga['instrtime'] . '</td>';
+		echo '<td>' . $riga['rmks'] . '</td>';
+		echo '</tr>';
+	}
+	echo '</table> ';
+}
+
+
 
 function html_voli($tabella, $limiti){
 
 
-	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -  <a href="index.php?logout">Logout</a> </h3>';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
 		echo '<h2>Informazioni utili </h2>';

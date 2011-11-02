@@ -3,7 +3,9 @@ TODO
 
 == AUTENTICAZIONE ==
 
-Autenticazione:  definire tabella e informazioni utenti
+Autenticazione:  definire tabella e informazioni utenti FATTO
+
+
 Registrazione con invio password a indirizzo mail
 Autenticazione solo via facebook, o meglio oauth2, openid o che ne so!
 Cambia password: recuperare da upacontratti?
@@ -18,7 +20,8 @@ Impostazione tempi di partenza (volo zero) FATTO
 
 
 
-import/export dei voli (formato csv)
+import dei voli (formato csv)
+export dei voli (formato xls)
 Paginazione dei voli.
 Stampa del pdf del logbook da norme ICAO
 validazione dati (orari, date e tempi lato client- jQuery o simili?) 

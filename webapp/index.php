@@ -1,5 +1,6 @@
 <?
 session_start();
+ob_start();
 require_once('config.php');
 
 html_header();
@@ -24,4 +25,5 @@ if ($a->checkAuth()){
 html_footer();
 
 require_once('debriefing.php');
+ob_flush();
 ?>
