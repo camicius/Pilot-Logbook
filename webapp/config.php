@@ -4,11 +4,7 @@ $config="ok";
 /*
 	Dati di connessione al db e a ldap
 */
-define('DB_HOST',   'localhost');
-define('DB_PORT',   '5432');
-define('DB_USER',   'postgres');
-define('DB_PSW',    'passw0rd');
-define('DB_SCHEMA', 'postgres');
+require_once 'params.php';
 
 
 /*

@@ -11,20 +11,6 @@ function errore($testo){
 
 }
 
-function verificaPassword($username, $password){
-	global $db;
-
-//TODO
-	$result="1";
-	//
-	//echo $result. "\n\n";
-	if ($result=="1"){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
 function pagina(){
 	// Costruzione della pagina
