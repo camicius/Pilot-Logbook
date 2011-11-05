@@ -32,7 +32,7 @@ if ( isset($_POST['username']) && isset($_POST['password']) && isset($_POST['pas
 			errore("register - ".$res->getUserInfo());
 		}
 		echo "<h3>Procedi al login, con la password scelta!</h3>";
-		mail ($mailto , "Logbook - Registrato nuovo utente" , "Registrato nuovo utente: \n username" . $_POST['username']);
+		mail (MAILTO , "Logbook - Registrato nuovo utente" , "Registrato nuovo utente: \n username" . $_POST['username']);
 		html_login();
     }
 }else{
