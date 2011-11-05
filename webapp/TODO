@@ -4,11 +4,10 @@ TODO
 == AUTENTICAZIONE ==
 
 Autenticazione:  definire tabella e informazioni utenti FATTO
+Registrazione One shot FATTO
 
-
-Registrazione con invio password a indirizzo mail
 Autenticazione solo via facebook, o meglio oauth2, openid o che ne so!
-Cambia password: recuperare da upacontratti?
+Cambia password
 recupero password: mail con link per il reset + mail con la password nuova da cambiare
 
 == APPLICAZIONE ==
@@ -17,11 +16,11 @@ Pagina statistiche. FATTO in testata
 inserimento e modifica voli FATTO
 validazione dati (orari, date e tempi lato server) FATTO
 Impostazione tempi di partenza (volo zero) FATTO
+export dei voli (formato xls) FATTO
 
 
 
 import dei voli (formato csv)
-export dei voli (formato xls)
 Paginazione dei voli.
 Stampa del pdf del logbook da norme ICAO
 validazione dati (orari, date e tempi lato client- jQuery o simili?) 
