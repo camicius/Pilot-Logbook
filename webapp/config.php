@@ -17,9 +17,8 @@ require_once 'MDB2.php';
 define('PIC',     'PIC');
 define('COP',     'Copilot');
 define('DUAL',     'Dual');
-define('INSTR',     'Instructor');
 $options=Array('spt'=> Array('S', 'M'),
-			   'function' => Array (PIC, COP,DUAL,INSTR),
+			   'function' => Array (PIC, COP,DUAL),
 
 );
 

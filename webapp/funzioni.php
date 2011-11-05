@@ -228,15 +228,16 @@ function getVoli(){
 
 function getOldies(){
 
-	global $db, $username, $sqlOldPlaces, $sqlOldModel, $sqlOldRegs, $sqlOldPIC;
+	global $db, $sqlOldPlaces, $sqlOldModel, $sqlOldRegs, $sqlOldPIC;
 
+	$username=$_SESSION['username'];
 //recupero i vecchi aeroporti
 	$sql=$sqlOldPlaces;
  	$sql=str_replace(COSTANTE_USER,$db->quote($username, 'text'), $sql);
 	$res=$db->query($sql);
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getVolo - ".$res->getUserInfo());
+		errore("getOldies - ".$res->getUserInfo());
 	}
 	$oldPlaces= $res->fetchCol();
 
@@ -246,7 +247,7 @@ function getOldies(){
 	$res=$db->query($sql);
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getVolo - ".$res->getUserInfo());
+		errore("getOldies - ".$res->getUserInfo());
 	}
 	$oldModels= $res->fetchCol();
 
@@ -256,7 +257,7 @@ function getOldies(){
 	$res=$db->query($sql);
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getVolo - ".$res->getUserInfo());
+		errore("getOldies - ".$res->getUserInfo());
 	}
 	$oldRegs= $res->fetchCol();
 
@@ -266,7 +267,7 @@ function getOldies(){
 	$res=$db->query($sql);
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getVolo - ".$res->getUserInfo());
+		errore("getOldies - ".$res->getUserInfo());
 	}
 	$oldPIC= $res->fetchCol();
 
@@ -305,17 +306,12 @@ function getVolo($pk){
 	if($voli[0]['pictimebool']  =='t') $voli[0]['function']=PIC;
 	if($voli[0]['coptimebool']  =='t') $voli[0]['function']=COP;
 	if($voli[0]['dualtimebool'] =='t') $voli[0]['function']=DUAL;
-	if($voli[0]['instrtimebool']=='t') $voli[0]['function']=INSTR;
+	if($voli[0]['instrtimebool']=='t') $voli[0]['instructor']='S';
+	else  $voli[0]['instructor']='N';
 	
 
 	return $voli[0];
 }
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
 
 function getTempoZero($username){
 	global $sqlGetTempoZero, $db;
@@ -329,19 +325,11 @@ function getTempoZero($username){
 
 	if (PEAR::isError($res)) {
 	//	var_dump($res);
-		errore("getVolo - ".$res->getUserInfo());
+		errore("getTempoZero - ".$res->getUserInfo());
 	}
 	
 	return $res->fetchRow();
 }
-
-
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
 
 function insertVolo($volo){
 	$errorevalidazione=validate($volo);
@@ -373,7 +361,9 @@ function insertVolo($volo){
 	if($volo['function']==PIC)  $volo['pictime']=  $volo['totalflighttime']; else $volo['pictime']  =0;
 	if($volo['function']==COP)  $volo['coptime']=  $volo['totalflighttime']; else $volo['coptime']  =0;	
 	if($volo['function']==DUAL) $volo['dualtime']= $volo['totalflighttime']; else $volo['dualtime'] =0;
-	if($volo['function']==INSTR)$volo['instrtime']=$volo['totalflighttime']; else $volo['instrtime']=0;
+
+	if(formToDB($volo,'instructor')=='S')$volo['instrtime']=$volo['totalflighttime']; else $volo['instrtime']=0;
+
 //	var_dump($volo);
 	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'date'), $sql);
 	$sql=str_replace(COSTANTE_DEPPLACE,        $db->quote($volo['depplace'],        'text'), $sql);
@@ -446,7 +436,8 @@ function updateVolo($volo){
 	if($volo['function']==PIC)  $volo['pictime']=  $volo['totalflighttime']; else $volo['pictime']  =0;
 	if($volo['function']==COP)  $volo['coptime']=  $volo['totalflighttime']; else $volo['coptime']  =0;	
 	if($volo['function']==DUAL) $volo['dualtime']= $volo['totalflighttime']; else $volo['dualtime'] =0;
-	if($volo['function']==INSTR)$volo['instrtime']=$volo['totalflighttime']; else $volo['instrtime']=0;
+	if(formToDB($volo,'instructor')=='S')$volo['instrtime']=$volo['totalflighttime']; else $volo['instrtime']=0;
+
 //	var_dump($volo);
 	$sql=str_replace(COSTANTE_PK,              $db->quote($volo['pk'],              'text'), $sql);
 	$sql=str_replace(COSTANTE_DATA,            $db->quote($volo['data'],            'date'), $sql);
@@ -489,12 +480,7 @@ function updateVolo($volo){
 
 
 }
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
+
 function saveTempozero($tempozero){
 	global $sqlUpdateTempoZero, $db;
 	$tempozero['totalflighttime']=$tempozero['pictime']+$tempozero['coptime']+$tempozero['dualtime']+$tempozero['instrtime'];
@@ -527,12 +513,7 @@ function saveTempozero($tempozero){
 
 
 }
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
+
 function campo2error($campo, $valore){
 	switch ($campo){
 		case 'depplace': 

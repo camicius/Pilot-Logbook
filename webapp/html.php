@@ -214,6 +214,7 @@ function html_volo($tabella=Array(), $oldies){
 			'nighttime'        => '',
 			'ifrtime'          => '',
 			'function'         => '',
+			'instructor'       => 'N',
 			'rmks'             => ''
 		);	
 	}
@@ -244,6 +245,7 @@ function html_volo($tabella=Array(), $oldies){
 	echo '<tr><th rowspan="2">Op. Time</th><th>notturno</th><td>'                   . html_time              ('nighttime',                       $tabella['nighttime'])     . '</td></tr>';
 	echo '<tr><th>IFR</th><td>'                                                     . html_time              ('ifrtime',                         $tabella['ifrtime'])       . '</td></tr>';
 	echo '<tr><th colspan="2">Pilot <br />Function <br />Time</th><td>'             . html_radio             ('function', $options['function'],  $tabella['function'])      . '</td></tr>';
+	echo '<tr><th colspan="2">Instructor</th><td>'                                  . html_checkbox          ('instructor',                      $tabella['instructor'])    . '</td></tr>';
 	echo '<tr><th colspan="2">Remarks</th><td>'                                     . html_number            ('rmks',                            $tabella['rmks'])          . '</td></tr>';
 
 
@@ -293,19 +295,19 @@ function html_tempozero($tempoZero){
 
 
 
-function html_combobox($name, $options, $selezionato=""){
+function html_combobox($name, $optionsCB, $selezionato=""){
 	$string="";
 	$string.= '<select name="'.$name.'"> ';
-	foreach ($options as $option){
+	foreach ($optionsCB as $option){
 		if($selezionato==$option['value']) $string.=  '<option value="'.$option['value'].'" name="'.$option['value'].'" selected="selected">'.$option['label'].' </option>';
 		else $string.=  '<option value="'.$option['value'].'" name="'.$option['value'].'"> '.$option['label'].'</option>';
   	}
 	$string.=  '</select> ';
 	return $string;
 }
-function html_radio($name, $options, $selezionato=""){
+function html_radio($name, $optionsR, $selezionato=""){
 	$string="";
-	foreach ($options as $option){
+	foreach ($optionsR as $option){
 		if($selezionato==$option) $string.=  '<input type="radio" value="'.$option.'" name="'.$name.'" checked="checked">'.$option.' </input>';
 		else $string.=  '<input type="radio" value="'.$option.'" name="'.$name.'"> '.$option.'</input>';
   	}

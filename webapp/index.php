@@ -5,11 +5,11 @@ require_once('config.php');
 
 html_header();
 
-$options = array(
+$optionsAuth = array(
 	'dsn' => $dsn,
 	'table' => 'dat.auth'
   );
-$a = new Auth("MDB2", $options, "loginFunction");
+$a = new Auth("MDB2", $optionsAuth, "loginFunction");
 $a->start();
 if ( isset($_GET['logout']) && $a->checkAuth()) {
 	unset($_SESSION['username']);
