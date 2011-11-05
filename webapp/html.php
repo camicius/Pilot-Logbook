@@ -21,17 +21,21 @@ function html_header(){
 
 }
 
-function html_login($error=""){
-	echo '<div id="login"><form method="post" action="index.php">';
+function html_login($action="index.php", $error=""){
+	echo '<div id="login"><form method="post" action="'.$action.'">';
 	echo '<div id="box"><label class="label_login" for="username">Codice utente:</label> <input type="text" name="username" id="username"/><br />';
 	echo '<label class="label_login" for="password">Password:</label> <input type="password" name="password" id="password"/><br />';
+	if($action=="register.php") echo '<label class="label_login" for="password">Ripeti password:</label> <input type="password" name="passwordrpt" id="passwordrpt"/><br />';
 	echo '';
 	echo '';
 	echo '';
 	echo '';
 	echo '';
 	echo '<input type="submit" value="Login!" /><br />';
-	echo "$error";
+	echo $error;
+
+	echo '<br /><br /><br />';
+	echo '<a href="register.php">Registrati!</a>';	
 	echo '</div>';
 
 	echo '</form></div>';
