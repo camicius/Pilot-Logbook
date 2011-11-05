@@ -35,7 +35,7 @@ if ( isset($_POST['username']) && isset($_POST['password']) && isset($_POST['pas
 		$headers = 'From: ' . MAILTO . "\r\n" .
 					'Reply-To: ' . MAILTO . "\r\n" .
 					'X-Mailer: PHP/' . phpversion();
-		mail (MAILTO , "Logbook - Registrato nuovo utente" , "Registrato nuovo utente: \n username" . $_POST['username']);
+		mail (MAILTO , "Logbook - Registrato nuovo utente" , "Registrato nuovo utente: \n username: " . $_POST['username'], $headers);
 		html_login();
     }
 }else{
