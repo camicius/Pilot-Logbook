@@ -206,18 +206,18 @@ function getVoli(){
 	$volo['acftreg']        = '';
 	$volo['spt']            = '';
 	$volo['multipilot']     = '';
-	$volo['totalflighttime']= $row['totalflighttime'] ;
+	$volo['totalflighttime']= prettyPrint($row['totalflighttime']);
 	$volo['picname']        = '';
 	$volo['today']          = '';
 	$volo['tonight']        = '';
 	$volo['ldgday']         = '';
 	$volo['ldgnight']       = '';
-	$volo['nighttime']      = $row['nighttime'] ;
-	$volo['ifrtime']        = $row['ifrtime'];
-	$volo['pictime']        = $row['pictime'];
-	$volo['coptime']        = $row['coptime'];
-	$volo['dualtime']       = $row['dualtime'];
-	$volo['instrtime']      = $row['instrtime'];
+	$volo['nighttime']      = prettyPrint($row['nighttime']) ;
+	$volo['ifrtime']        = prettyPrint($row['ifrtime']);
+	$volo['pictime']        = prettyPrint($row['pictime']);
+	$volo['coptime']        = prettyPrint($row['coptime']);
+	$volo['dualtime']       = prettyPrint($row['dualtime']);
+	$volo['instrtime']      = prettyPrint($row['instrtime']);
 	$volo['rmks']           = '';
 	$voli[]=$volo;
 	return $voli;
@@ -559,6 +559,14 @@ function booleanToDB($bool){
 function dbToBoolean($dbValue){
 	return $dbValue=="S";
 
+}
+
+function prettyPrint($minutes){
+	$minuti=$minutes%60;
+	$ore=($minutes-$minuti)/60;
+	if ($minutes==0) return "";
+	else if ($ore==0)return $minuti."m";
+	else return $ore."h ".$minuti."m";
 }
 ?>
 
