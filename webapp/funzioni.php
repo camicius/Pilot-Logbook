@@ -125,7 +125,9 @@ function validate($volo){
 
 function loginFunction($username = null, $status = null, &$auth = null)
 {
-	html_login();
+	if($status==-3) html_login("index.php","Username o password errati");
+	else html_login();
+	
 }
 
 
