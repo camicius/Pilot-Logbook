@@ -197,6 +197,7 @@ function getVoli(){
 	$row = $res->fetchRow();
 	$volo['pk']             = '';
 	$volo['data']           = '';
+	$volo['datapp']         = '';
 	$volo['depplace']       = '';
 	$volo['arrplace']       = '';
 	$volo['deptime']        = '';

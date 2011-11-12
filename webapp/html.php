@@ -34,7 +34,7 @@ function html_login($action="index.php", $error=""){
 	echo '<input type="submit" value="Login!" /><br />';
 	echo $error;
 
-	echo '<br /><br /><br />';
+	echo '<br />';
 	echo '<a href="register.php">Registrati!</a>';	
 	echo '</div>';
 
@@ -148,8 +148,6 @@ function html_backup($tabella){
 
 
 function html_voli($tabella, $limiti){
-
-
 	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -  <a href="index.php?logout">Logout</a> </h3>';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
@@ -161,11 +159,11 @@ function html_voli($tabella, $limiti){
 		html_headerRow();
 		$countRow=0;	
 		foreach ($tabella as $riga)	{
-			if(++$countRow== 15) html_headerRow();
+			//if(++$countRow== 15) html_headerRow();
 			echo '<tr>';
 			if($riga['pk']!='')echo '<td><a href="index.php?pk=' . $riga['pk'] . '">modifica</a></td>';
 			else echo '<td>Totali</td>';
-			echo '<td>' . $riga['data']  . '</td>';
+			echo '<td>' . $riga['datapp']  . '</td>';
 			echo '<td>' . $riga['depplace'] . '</td>';
 			echo '<td>' . $riga['deptime'] . '</td>';
 			echo '<td>' . $riga['arrplace'] . '</td>';
