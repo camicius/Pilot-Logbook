@@ -18,7 +18,7 @@ $sqlLimiteAtterraggi="select sum (ldgday)+sum (ldgnight) as ldg, sum (today)+sum
 $sqlOldPlaces = 'select * from (select  arrplace as place from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\' 
 union   
 select  depplace as place from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ) as place
-group by place order by count(*)
+group by place order by count(*) desc
 ';
 
 
