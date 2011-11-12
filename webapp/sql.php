@@ -15,10 +15,16 @@ where username=%%USER%%";
 $sqlLimiteTempo="select sum(totalflighttime) as totalflighttime from dat.logbook where username=%%USER%% and data > current_date -integer '30'";
 $sqlLimiteAtterraggi="select sum (ldgday)+sum (ldgnight) as ldg, sum (today)+sum (tonight) as to from dat.logbook where username=%%USER%% and data > current_date -integer '90'";
 
-$sqlOldPlaces = 'select distinct arrplace  from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\' union distinct  select distinct depplace from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ';
-$sqlOldModel  = 'select distinct acftmodel from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ';
-$sqlOldRegs   = 'select distinct acftreg   from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ';
-$sqlOldPIC    = 'select distinct picname   from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ';
+$sqlOldPlaces = 'select * from (select  arrplace as place from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\' 
+union   
+select  depplace as place from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  ) as place
+group by place order by count(*)
+';
+
+
+$sqlOldModel  = 'select acftmodel from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  group by acftmodel order by count (*) desc';
+$sqlOldRegs   = 'select acftreg   from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  group by acftreg   order by count (*) desc ';
+$sqlOldPIC    = 'select picname   from dat.logbook WHERE username=%%USER%% and depplace !=\'T0T0\'  group by picname   order by count (*) desc';
 
 
 
