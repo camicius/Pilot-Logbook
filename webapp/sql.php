@@ -6,7 +6,7 @@ if(!isset ($config)){ exit(127);}
 
 
 define ('COSTANTE_USER', '%%USER%%');
-$sqlVoli='SELECT pk, data, to_char(data, \'DD-MM-YYYY\') as datapp, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime = multipilot as multipilotbool, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%% and depplace!=\'T0T0\' and arrplace!=\'T0T0\' order by data desc';
+$sqlVoli='SELECT pk, data, to_char(data, \'DD-MM-YYYY\') as datapp, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime = multipilot as multipilotbool, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%% and depplace!=\'T0T0\' and arrplace!=\'T0T0\' order by data desc, deptime desc';
 
 $sqlTotali="select sum(totalflighttime) as totalflighttime, sum(nighttime) as nighttime,  sum(ifrtime) as ifrtime, sum(pictime) as pictime, sum(coptime) as coptime, sum(dualtime) as dualtime,  sum(instrtime) as instrtime
 from dat.logbook
