@@ -35,6 +35,7 @@ require_once 'html.php';
 require_once 'funzioni.php';
 require_once 'Formvalidator.php';
 require_once "Auth.php";
+require_once 'fpdf/fpdf.php';
 /*
 	connessione al db
 */

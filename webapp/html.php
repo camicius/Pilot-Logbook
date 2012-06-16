@@ -145,10 +145,118 @@ function html_backup($tabella){
 	echo '</table> ';
 }
 
+function pdf_logbook($tabella){
+	$pdf = new FPDF('L','mm','A4');
+	$pdf->AddPage();
+
+	pdf_header($pdf);
+	
+	foreach ($tabella as $riga)	{
+		pdf_riga($riga, $pdf);
+		
+	}
+	$pdf->Output("logbook.pdf", "I");
+
+}
+//Cell(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])
+function pdf_header($pdf){
+	$pdf->SetFont('Arial','B',18);
+	$pdf->SetXY(10,10);
+	$pdf->Cell(0,10,"Libretto voli secondo norme JAR",1, 1,"L");
+	$pdf->SetFont('Arial','B',10);
+	$pdf->SetXY(10,20);
+	$pdf->Cell(14,14, "Data",         1, 0, "C"); 
+	$pdf->Cell(20, 7, "Departure",    1, 0, "C");
+	$pdf->Cell(20, 7, "Arrival",      1, 0, "C");
+	$pdf->Cell(37, 7, "Aircraft",     1, 0, "C");
+	$pdf->Cell(12, 7, "S.P.T.",       1, 0, "C");
+	$pdf->Cell( 9,14, "MPT",          1, 0, "C");
+	$pdf->Cell( 9,14, "TFT",          1, 0, "C");
+	$pdf->Cell(31,14, "PIC Name",     1, 0, "C");
+	$pdf->SetFont('Arial','B',7);
+	$pdf->Cell(12, 7, "Takeoff",      1, 0, "C");
+	$pdf->Cell(12, 7, "Landings",     1, 0, "C");
+	$pdf->Cell(18, 7, "Operat.Time",  1, 0, "C");
+	$pdf->Cell(36, 7, "Pilot Function Time", 1, 0, "C");
+	$pdf->Cell(0, 14, "Remarks",      1, 0, "C");
+	$pdf->SetXY(24,27);	
+	$pdf->Cell(10, 7, "Place",      1, 0, "C");
+	$pdf->Cell(10, 7, "Time",       1, 0, "C");
+	$pdf->Cell(10, 7, "Place",      1, 0, "C");
+	$pdf->Cell(10, 7, "Time",       1, 0, "C");
+	$pdf->Cell(23, 7, "Make,model", 1, 0, "C");
+	$pdf->Cell(14, 7, "Reg",        1, 0, "C");
+	$pdf->Cell( 6, 7, "SE",         1, 0, "C");
+	$pdf->Cell( 6, 7, "ME",         1, 0, "C");
+	$pdf->SetXY(162,27);
+	$pdf->SetFont('Arial','B',5);	
+	$pdf->Cell( 6, 7, "Day",         1, 0, "C");
+	$pdf->Cell( 6, 7, "Nig.",        1, 0, "C");
+	$pdf->Cell( 6, 7, "Day",         1, 0, "C");
+	$pdf->Cell( 6, 7, "Nig.",        1, 0, "C");
+	$pdf->Cell( 9, 7, "Nig.",        1, 0, "C");	
+	$pdf->Cell( 9, 7, "IFR",         1, 0, "C");
+	$pdf->Cell( 9, 7, "PIC",         1, 0, "C");
+	$pdf->Cell( 9, 7, "Copil",       1, 0, "C");
+	$pdf->Cell( 9, 7, "Dual",        1, 0, "C");
+	$pdf->Cell( 9, 7, "Instr",       1, 1, "C");
+
+}
+
+
+function pdf_riga($riga, $pdf){
+	$pdf->SetFont('Arial','',6);
+	$pdf->Cell(14, 7, $riga['datapp']          , 1, 0, "L"); 
+	$pdf->SetFont('Arial','',8);
+	$pdf->Cell(10, 7, $riga['depplace']        , 1, 0, "L");
+	$pdf->Cell(10, 7, pdf_pphour( $riga['deptime']), 1, 0, "L");
+	$pdf->Cell(10, 7, $riga['arrplace']        , 1, 0, "L");
+	$pdf->Cell(10, 7, pdf_pphour( $riga['arrtime']), 1, 0, "L");
+	$pdf->Cell(23, 7, $riga['acftmodel']       , 1, 0, "L");
+	$pdf->Cell(14, 7, $riga['acftreg']         , 1, 0, "L");
+	$riga['spt1']="";
+	$riga['spt2']="";
+	if($riga['spt']=="S")  $riga['spt1']="X";
+	if($riga['spt']=="M")  $riga['spt2']="X";
+	$pdf->Cell( 6, 7, $riga['spt1']             , 1, 0, "L");
+	$pdf->Cell( 6, 7, $riga['spt2']             , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['multipilot'] )     , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['totalflighttime']) , 1, 0, "L");
+	$pdf->SetFont('Arial','',7);
+	$pdf->Cell(31, 7, $riga['picname']         , 1, 0, "L");
+	$pdf->SetFont('Arial','',8);
+	$pdf->Cell( 6, 7, $riga['today']           , 1, 0, "L");
+	$pdf->Cell( 6, 7, $riga['tonight']         , 1, 0, "L");
+	$pdf->Cell( 6, 7, $riga['ldgday']          , 1, 0, "L");
+	$pdf->Cell( 6, 7, $riga['ldgnight']        , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['nighttime'])       , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['ifrtime'])         , 1, 0, "L");	
+	$pdf->Cell( 9, 7, pdf_pptime($riga['pictime'])         , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['coptime'])         , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['dualtime'])        , 1, 0, "L");
+	$pdf->Cell( 9, 7, pdf_pptime($riga['instrtime'])       , 1, 0, "L");
+	$pdf->Cell( 0, 7, $riga['rmks']            , 1, 1, "L");
+}
+
+function pdf_pphour($hour){
+	return(substr($hour,0,2) . ":" . substr($hour,2,2)); 
+
+
+}
+function pdf_pptime($time){
+
+	$min=$time%60;
+	$ore=($time-$min)/60;
+	if ($min<10)$min="0$min";
+	return "$ore:$min";
+	
+
+
+}
 
 
 function html_voli($tabella, $limiti){
-	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -   <a href="index.php?logbook"> Genera in formato pdf</a> -  <a href="index.php?logout">Logout</a> </h3>';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
 		echo '<h2>Informazioni utili </h2>';

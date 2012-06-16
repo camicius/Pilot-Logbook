@@ -20,6 +20,11 @@ function pagina(){
 		header("Content-Type: application/vnd.ms-excel");
 		$tabella=getVoli();
 		html_backup($tabella);
+	}else if(isset($_GET['logbook'])){						#genero il logbook in pdf
+		ob_clean();
+		$tabella=getVoli("asc");
+		pdf_logbook($tabella);
+		exit();
 	}else if(isset($_GET['tempozero'])){										#richiamo la pagina del tempo zero per la modifica
 		$tempozero=getTempoZero($_SESSION['username']);
 		html_tempozero($tempozero);
@@ -59,7 +64,7 @@ function pagina(){
 	}
 	
 }
-// multipilot, totalflighttime, nighttime, ifrtime, pictime, coptime, dualtime, instrtime
+
 function validateTempoZero($tempoZero){
 	$errore="";
 	$validations = array(
@@ -167,10 +172,11 @@ function getLimiti(){
 
 
 
-function getVoli(){
+function getVoli($order="desc"){
 	global $sqlVoli, $sqlTotali, $db;
 	$sql=$sqlVoli;
  	$sql=str_replace(COSTANTE_USER,$db->quote($_SESSION['username'], 'text'), $sql);
+ 	$sql=str_replace(COSTANTE_ORDER,$order, $sql);
 
 	$res=$db->query($sql);
 

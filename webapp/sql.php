@@ -6,7 +6,8 @@ if(!isset ($config)){ exit(127);}
 
 
 define ('COSTANTE_USER', '%%USER%%');
-$sqlVoli='SELECT pk, data, to_char(data, \'DD-MM-YYYY\') as datapp, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime = multipilot as multipilotbool, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%% and depplace!=\'T0T0\' and arrplace!=\'T0T0\' order by data desc, deptime desc';
+define ('COSTANTE_ORDER', '%%ORDER%%');
+$sqlVoli='SELECT pk, data, to_char(data, \'DD-MM-YYYY\') as datapp, depplace, arrplace, to_char(deptime, \'HH24MI\') as deptime, to_char(arrtime, \'HH24MI\') as arrtime, acftmodel, acftreg, spt, multipilot, totalflighttime = multipilot as multipilotbool, totalflighttime, picname, today, tonight, ldgday, ldgnight, nighttime, ifrtime, pictime, coptime, dualtime, instrtime, rmks, user FROM dat.logbook WHERE username=%%USER%% and depplace!=\'T0T0\' and arrplace!=\'T0T0\' order by data %%ORDER%%, deptime %%ORDER%%';
 
 $sqlTotali="select sum(totalflighttime) as totalflighttime, sum(nighttime) as nighttime,  sum(ifrtime) as ifrtime, sum(pictime) as pictime, sum(coptime) as coptime, sum(dualtime) as dualtime,  sum(instrtime) as instrtime
 from dat.logbook
@@ -75,3 +76,4 @@ $sqlGetTempoZero="select pk, multipilot, totalflighttime, nighttime, ifrtime, pi
 $sqlUpdateTempoZero='UPDATE dat.logbook SET multipilot=%%MULTIPILOT%%, totalflighttime=%%TOTALFLIGHTTIME%%, nighttime=%%NIGHTTIME%%, ifrtime=%%IFRTIME%%, pictime=%%PICTIME%%, coptime=%%COPTIME%%, dualtime=%%DUALTIME%%, instrtime=%%INSTRTIME%% WHERE PK=%%PK%% and username=%%USER%%  and depplace=\'T0T0\' and arrplace=\'T0T0\'' ;
 
 ?>
+
