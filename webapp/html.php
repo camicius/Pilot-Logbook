@@ -244,7 +244,7 @@ function pdf_pphour($hour){
 
 }
 function pdf_pptime($time){
-
+	if(strpos($time, "h")!=0) return $time;		
 	$min=$time%60;
 	$ore=($time-$min)/60;
 	if ($min<10)$min="0$min";
