@@ -256,7 +256,7 @@ function pdf_pptime($time){
 
 
 function html_voli($tabella, $limiti){
-	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -   <a href="index.php?logbook"> Genera in formato pdf</a> -  <a href="index.php?logout">Logout</a> </h3>';
+	echo '<h3> <a href="index.php?new"> Inserisci un nuovo volo</a> - <a href="index.php?tempozero"> Modifica i tempi volo di partenza</a> -  <a href="index.php?backup"> Esporta il logbook</a> -   <a href="index.php?logbook"> Genera in formato pdf</a> -  <a href="index.php?logout">Logout</a> </h3> <br /> Sto progettando la parte dei grafici e delle statistiche, <a href="mailto:logbook@andreaocchi.net">mandami una mail</a> con quello che ti piacerebbe avere!';
 	if(count ($tabella)==0)echo '<h1> Nessun volo presente</h1>';
 	else {
 		echo '<h2>Informazioni utili </h2>';
